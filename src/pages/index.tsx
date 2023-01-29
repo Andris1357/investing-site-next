@@ -2,6 +2,13 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
+// import Router from 'next/router'
+import Link from 'next/link'
+
+// export default function Index() {
+//   Router.push('@/pages/trade')
+//   return null
+// }
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,6 +44,12 @@ export default function Home() {
               />
             </a>
           </div>
+        </div>
+
+        <div>
+          <Link href="/trade">
+            Trading page  
+          </Link>
         </div>
 
         <div className={styles.center}>
@@ -121,3 +134,13 @@ export default function Home() {
     </>
   )
 }
+
+// Home.getInitialProps = async (ctx) => {
+//   if (ctx.req) {
+//     ctx.res.writeHead(302, { Location: '/trade' }).end()
+//   } else {
+//     Router.push('/trade')
+//   }
+// }
+
+// export default IndexPage
