@@ -1,7 +1,9 @@
-export type TradeAreaArgs = {
-    button_id: string, 
-    button_text: string, 
-    info_text: string
+export class TradeAreaArgs {
+    constructor (
+        public button_id: string, 
+        public button_text: string, 
+        public info_text: string
+    ) {}
 }
 // TD: wrap html output in <React.Fragment> to assign 'key' prop
 export default function TradeArea(args: TradeAreaArgs): JSX.Element {

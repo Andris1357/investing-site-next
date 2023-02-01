@@ -13,7 +13,7 @@ export default function WithdrawArea(args: WithdrawAreaArgs): JSX.Element {
                     {`Available tokens: ${args.available_tokens}`}
                 </div>
             </div>
-            <button className="glowing-button">WITHDRAW</button>
+            <button className="glowing-button">Withdraw to your wallet</button>
         </div>
     )
 }

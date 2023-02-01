@@ -3,36 +3,50 @@ import RedeemDonationsArea from "./redeem_donations_area";
 import WithdrawArea from "./withdraw_area";
 import {TradeAreaArgs} from "@/pages/trade_button_area";
 
-let available_eth: number = 1.485204;
-let available_tokens: number = 43729;
-let available_donations: number = 73921;
-
-const trade_area_args: TradeAreaArgs[] = [
-    {
-        button_id: "buy-tokens",
-        button_text: "Buy tokens for ETH" ,
-        info_text: `Available ETH: ${available_eth}`
-    },
-    {
-        button_id: "buy-eth",
-        button_text: "Buy ETH for tokens" ,
-        info_text: `Available tokens: ${available_tokens}`
-    }
-]
+import React, { useState, useRef, useCallback } from 'react';
 
 export default function TradingPage(): JSX.Element {
+    const [available_tokens, setTokens] = useState<number>(43729);
+    const [available_donations, setDonations] = useState<number>(73921);
+    const [available_eth, setEth] = useState<number>(1.485204);
+
+    const redeem_input_ref = useRef(0);
+
+    const redeemTokens = useCallback((redeem_input_: HTMLInputElement | any) => {
+        setTokens(tokens_ => tokens_ + Number(redeem_input_.value));
+        console.log(`increased token amount by ${redeem_input_.value}, new value of token amount is ${available_tokens}`)
+    }, [])
+
     return (
         <div id="absolute-parent">
             <div id="trade-area">
-                {trade_area_args.map(object_ => {
+                {[
+                    new TradeAreaArgs(
+                        "buy-tokens",
+                        "Buy tokens for ETH",
+                        `Available ETH: ${available_eth}`
+                    ),
+                    new TradeAreaArgs(
+                        "buy-eth",
+                        "Buy ETH for tokens",
+                        `Available tokens: ${available_tokens}`
+                    )
+                ].map(object_ => { // REPLACE WITH GENERATED OBJ <= ßUSESTATE
                     return <TradeArea 
                         button_id={object_.button_id}
-                        button_text={object_.button_text} 
+                        button_text={object_.button_text}
                         info_text={object_.info_text}
                     />
                 })}
             </div>
-            <RedeemDonationsArea available_donations={available_donations}/>
+            <RedeemDonationsArea 
+                available_donations={available_donations}
+                redeemOnClick={redeemTokens.bind(
+                    null, 
+                    redeem_input_ref.current
+                )}
+                input_ref={redeem_input_ref}
+            />
             <WithdrawArea available_tokens={available_tokens}/>
         </div>
     )

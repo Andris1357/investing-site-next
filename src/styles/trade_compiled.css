@@ -37,7 +37,7 @@ input[type=text] {
 .input-with-max .max-button {
   position: absolute;
   right: 10px;
-  top: 3px;
+  top: 6px;
   padding-left: 5px;
   border: none;
   background-color: black;
