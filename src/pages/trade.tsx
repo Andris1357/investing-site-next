@@ -12,9 +12,10 @@ export default function TradingPage(): JSX.Element {
 
     const redeem_input_ref = useRef(0);
 
-    const redeemTokens = useCallback((redeem_input_: HTMLInputElement | any) => {
-        setTokens(tokens_ => tokens_ + Number(redeem_input_.value));
-        console.log(`increased token amount by ${redeem_input_.value}, new value of token amount is ${available_tokens}`)
+    const redeemTokens = useCallback(() => {
+        let redeem_input: HTMLInputElement | any = redeem_input_ref.current;
+        setTokens(tokens_ => tokens_ + Number(redeem_input.value));
+        console.log(`increased token amount by ${redeem_input.value}, new value of token amount is ${available_tokens}`)
     }, [])
 
     return (
@@ -41,10 +42,7 @@ export default function TradingPage(): JSX.Element {
             </div>
             <RedeemDonationsArea 
                 available_donations={available_donations}
-                redeemOnClick={redeemTokens.bind(
-                    null, 
-                    redeem_input_ref.current
-                )}
+                redeemOnClick={redeemTokens}
                 input_ref={redeem_input_ref}
             />
             <WithdrawArea available_tokens={available_tokens}/>
