@@ -11,6 +11,9 @@ export default function TradingPage(): JSX.Element {
     const [available_eth, setEth] = useState<number>(1.485204);
     // NOW: randomize default amounts
     const redeem_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
+    const withdraw_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
+    const buy_tokens_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
+    const buy_eth_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
 
     const redeemTokens = useCallback((): void => {
         let redeem_input: HTMLInputElement | any = redeem_input_ref.current;
@@ -18,8 +21,11 @@ export default function TradingPage(): JSX.Element {
         setDonations(amount_ => Number((amount_ - Number(redeem_input.value)).toFixed(5)));
     }, []);
     // TD: I need 4 inputRefs & 4 onClicks in total
-    const setInputValueToMax = useCallback((max_value_: number): void => {
-        let input_element: HTMLInputElement | any = redeem_input_ref.current;
+    const setInputValueToMax = useCallback((
+        max_value_: number, 
+        ref_: React.MutableRefObject<HTMLInputElement|null>
+    ): void => {
+        let input_element: HTMLInputElement | any = ref_.current;
         input_element.value = String(max_value_);
     }, [available_tokens, available_donations, available_eth]); // NOW: set ID for max-btn elements
     // NOW: maybe this only works w useEff | useRef << max_btn
@@ -32,7 +38,8 @@ export default function TradingPage(): JSX.Element {
                         "Buy tokens for ETH",
                         `Available ETH: ${available_eth}`,
                         "max-buy-with-eth",
-                        setInputValueToMax.bind(null, available_eth),
+                        setInputValueToMax.bind(null, available_eth, buy_tokens_input_ref),
+                        buy_tokens_input_ref,
 
                     ),
                     new TradeAreaArgs(
@@ -40,7 +47,8 @@ export default function TradingPage(): JSX.Element {
                         "Buy ETH for tokens",
                         `Available tokens: ${available_tokens}`,
                         "max-buy-with-tokens",
-                        setInputValueToMax.bind(null, available_tokens),
+                        setInputValueToMax.bind(null, available_tokens, buy_eth_input_ref),
+                        buy_eth_input_ref,
                     )
                 ].map(object_ => { // REPLACE WITH GENERATED OBJ <= ßUSESTATE
                     return <TradeArea 
@@ -49,6 +57,7 @@ export default function TradingPage(): JSX.Element {
                         info_text={object_.info_text}
                         max_id={object_.max_id}
                         maxOnClick={object_.maxOnClick}
+                        input_ref={object_.input_ref}
                     />
                 })}
             </div>
@@ -56,11 +65,12 @@ export default function TradingPage(): JSX.Element {
                 available_donations={available_donations}
                 redeemOnClick={redeemTokens}
                 input_ref={redeem_input_ref}
-                maxOnClick={setInputValueToMax.bind(null, available_donations)}
+                maxOnClick={setInputValueToMax.bind(null, available_donations, redeem_input_ref)}
             />
             <WithdrawArea 
                 available_tokens={available_tokens} 
-                maxOnClick={setInputValueToMax.bind(null, available_tokens)}
+                maxOnClick={setInputValueToMax.bind(null, available_tokens, withdraw_input_ref)}
+                input_ref={withdraw_input_ref}
             />
         </div>
     )
