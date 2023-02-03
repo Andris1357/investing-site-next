@@ -3,7 +3,7 @@ import React, {useRef} from "react";
 type RedeemDonationsAreaArgs = {
     available_donations: number,
     redeemOnClick: () => void,
-    input_ref: HTMLInputElement | any // React.MutableRefObject<number>
+    input_ref: React.MutableRefObject<HTMLInputElement|null> // React.MutableRefObject<number>
 }
 
 export default function RedeemDonationsArea(args: RedeemDonationsAreaArgs): JSX.Element {
@@ -14,7 +14,6 @@ export default function RedeemDonationsArea(args: RedeemDonationsAreaArgs): JSX.
                 <input 
                     id="amount-to-redeem" 
                     type="text" 
-                    defaultValue={0}
                     ref={args.input_ref}
                 ></input>
                 <button className="max-button">MAX</button>

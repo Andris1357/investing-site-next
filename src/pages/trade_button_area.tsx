@@ -1,8 +1,12 @@
+import { MouseEventHandler } from "react";
+
 export class TradeAreaArgs {
     constructor (
         public button_id: string, 
         public button_text: string, 
-        public info_text: string
+        public info_text: string,
+        public max_id: string,
+        public maxOnClick: MouseEventHandler<HTMLElement>,
     ) {}
 }
 // TD: wrap html output in <React.Fragment> to assign 'key' prop
@@ -12,10 +16,12 @@ export default function TradeArea(args: TradeAreaArgs): JSX.Element {
             <div className="input-with-max">
                 <label htmlFor="amount-input">Enter amount:</label>
                 <input id="amount-input" type="text"></input>
-                <button className="max-button">MAX</button>
+                <button id={args.max_id} className="max-button" onClick={args.maxOnClick}>MAX</button>
                 <div className="available-amount">{args.info_text}</div>
             </div>
-            <button id={args.button_id} className="glowing-button">{args.button_text}</button>
+            <button id={args.button_id} className="glowing-button">
+                {args.button_text}
+            </button>
         </div>
     )
 }
