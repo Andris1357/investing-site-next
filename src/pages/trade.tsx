@@ -9,19 +9,19 @@ export default function TradingPage(): JSX.Element {
     const [available_tokens, setTokens] = useState<number>(43729);
     const [available_donations, setDonations] = useState<number>(73921);
     const [available_eth, setEth] = useState<number>(1.485204);
-
+    // NOW: randomize default amounts
     const redeem_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
 
     const redeemTokens = useCallback((): void => {
         let redeem_input: HTMLInputElement | any = redeem_input_ref.current;
         setTokens(amount_ => Number((amount_ + Number(redeem_input.value)).toFixed(5)));
         setDonations(amount_ => Number((amount_ - Number(redeem_input.value)).toFixed(5)));
-    }, [])
+    }, []);
     // TD: I need 4 inputRefs & 4 onClicks in total
     const setInputValueToMax = useCallback((max_value_: number): void => {
         let input_element: HTMLInputElement | any = redeem_input_ref.current;
         input_element.value = String(max_value_);
-    }, [available_tokens, available_donations, available_eth]) // NOW: set ID for max-btn elements
+    }, [available_tokens, available_donations, available_eth]); // NOW: set ID for max-btn elements
     // NOW: maybe this only works w useEff | useRef << max_btn
     return (
         <div id="absolute-parent">
@@ -56,8 +56,12 @@ export default function TradingPage(): JSX.Element {
                 available_donations={available_donations}
                 redeemOnClick={redeemTokens}
                 input_ref={redeem_input_ref}
+                maxOnClick={setInputValueToMax.bind(null, available_donations)}
             />
-            <WithdrawArea available_tokens={available_tokens}/>
+            <WithdrawArea 
+                available_tokens={available_tokens} 
+                maxOnClick={setInputValueToMax.bind(null, available_tokens)}
+            />
         </div>
     )
 }
