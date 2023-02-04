@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, MouseEventHandler } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea } from './areas';
 
 class ChangeAmountCallBackArgs {
@@ -43,10 +43,10 @@ export default function TradingPage(): JSX.Element {
     const buy_tokens_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
     const buy_eth_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
 
-    function setAmount(args: SetAmountArgs): MouseEventHandler<HTMLElement> {
+    function setAmountUseCallback(args: SetAmountArgs): React.MouseEventHandler<HTMLElement> {
         return useCallback((): void => {
             let input: HTMLInputElement | any = args.ref.current;
-            console.log(`ref state: ${args.reference_state}`)
+            
             if (Number(input.value) < 0) {
                 input.value = "0";
             } 
@@ -56,61 +56,58 @@ export default function TradingPage(): JSX.Element {
             else {
                 for (let index_ = 0; index_ < args.setStates.length; index_++) {
                     let setStateAction: (value: React.SetStateAction<number>) => void = args.setStates[index_];
-                    console.log(`ref state in loop: ${args.reference_state}`)
                     setStateAction(changeAmountCallback(
                         input, 
                         args.callback_args[index_].multiplier_, 
                         args.callback_args[index_].digits_
                     ));
                 }
-                input.value = "0";
+                // input.value = "0"; // !: if this is in, only every second deduction is actually triggered
             }
-        }, [withdraw_input_ref, available_tokens])
+        }, [args.reference_state])
     }
 
-    const redeemTokens = useCallback((): void => {
-        let redeem_input: HTMLInputElement | any = redeem_input_ref.current;
-        
-        if (Number(redeem_input.value) < 0) {
-            redeem_input.value = "0";
-        } else if (Number(redeem_input.value) > available_donations) {
-            redeem_input.value = String(available_donations);
-        } else {
-            setTokens(changeAmountCallback(redeem_input, 1, 5));
-            setDonations(changeAmountCallback(redeem_input, -1, 5));
-        }
-    }, []);
+    const redeemTokens: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
+        available_donations,
+        [setTokens, setDonations],
+        [new ChangeAmountCallBackArgs(1, 5), new ChangeAmountCallBackArgs(-1, 5)],
+        redeem_input_ref
+    ));
 
-    const withdrawTokens: MouseEventHandler<HTMLElement> = setAmount(new SetAmountArgs(
+    const withdrawTokens: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
         available_tokens,
         [setTokens],
         [new ChangeAmountCallBackArgs(-1, 5)],
         withdraw_input_ref
     ))
     
-    const buyTokens = useCallback((): void => { // /\: refactor these to accepts args as functions -> ...changeAmountCallBack[] && ...(useState::setter)[]
-        let redeem_input: HTMLInputElement | any = buy_tokens_input_ref.current;
-        setTokens(amount_ => Number(
-            (amount_ + Number(redeem_input.value) * TOKEN_ETH_CONVERSION_RATE).toFixed(5)
-        ));
-        setEth(amount_ => Number((amount_ - Number(redeem_input.value)).toFixed(9)));
-    }, []);
+    const buyTokens: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
+        available_eth,
+        [setTokens, setEth],
+        [
+            new ChangeAmountCallBackArgs(TOKEN_ETH_CONVERSION_RATE, 5), 
+            new ChangeAmountCallBackArgs(-1, 9)
+        ],
+        buy_tokens_input_ref
+    ))
 
-    const buyEth = useCallback((): void => {
-        let redeem_input: HTMLInputElement | any = buy_tokens_input_ref.current;
-        setTokens(amount_ => Number((amount_ - Number(redeem_input.value)).toFixed(5)));
-        setEth(amount_ => Number(
-            (amount_ + Number(redeem_input.value) / TOKEN_ETH_CONVERSION_RATE).toFixed(9)
-        ));
-    }, []);
-    // NOW: amount::useRef.value sh never go below 0
-    const setInputValueToMax = useCallback((
-        max_value_: number, 
-        ref_: React.MutableRefObject<HTMLInputElement|null>
-    ): void => {
-        let input_element: HTMLInputElement | any = ref_.current;
-        input_element.value = String(max_value_);
-    }, [available_tokens, available_donations, available_eth]); // NOW: set ID for max-btn elements
+    const buyEth: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
+        available_tokens,
+        [setTokens, setEth],
+        [
+            new ChangeAmountCallBackArgs(-1, 5),
+            new ChangeAmountCallBackArgs(1 / TOKEN_ETH_CONVERSION_RATE, 9)
+        ],
+        buy_eth_input_ref
+    ))
+    
+    const setInputValueToMax = useCallback(
+        (max_value_: number, ref_: React.MutableRefObject<HTMLInputElement|null>): void => {
+            let input_element: HTMLInputElement | any = ref_.current;
+            input_element.value = String(max_value_);
+        }, 
+        [available_tokens, available_donations, available_eth]
+    );
     
     return (
         <div id="absolute-parent">
@@ -162,6 +159,5 @@ export default function TradingPage(): JSX.Element {
         </div>
     )
 }
-
 // TD: buy & sell buttons && withdraw tokens && redeem channel donations -> flexbox vertical 3
 // TD: user sh have ETH & token balance that change upon trading (& investing when I implement the second page)
