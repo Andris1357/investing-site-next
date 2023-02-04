@@ -1,7 +1,20 @@
 import React, { useState, useRef, useCallback, MouseEventHandler } from 'react';
 import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea } from './areas';
 
-const TOKEN_ETH_CONVERSION_RATE: number = 10000; // LT: will come from DB
+type ChangeAmountCallBackArgs = {
+    reference_element_: HTMLInputElement | any,
+    multiplier_: number, 
+    digits_: number
+}
+
+class SetAmountArgs {
+    constructor (
+        public reference_state: number,
+        public setStates: Array<(value: React.SetStateAction<number>) => void>,
+        public callback_args: ChangeAmountCallBackArgs[],
+        public ref: React.MutableRefObject<HTMLInputElement|null>,
+    ) {}
+}
 
 function shiftedRandom(range_: number, offset_: number, digits_: number): number {
     return Number((Math.random() * range_ + offset_).toFixed(digits_))
@@ -12,16 +25,44 @@ function changeAmountCallback(
     multiplier_: number, 
     digits_: number
 ): (amount_: number) => number {
-    return amount_ => Number(
-        (amount_ + Number(reference_element_.value) * multiplier_).toFixed(digits_)
-    )
+    return amount_ => {
+        const result: number = Number(
+            (amount_ + Number(reference_element_.value) * multiplier_).toFixed(digits_)
+        );
+        return result < 0 ? 0 : result // NOW: test /\ ~ redundant
+    }
 }
+
+function setAmount(args: SetAmountArgs): MouseEventHandler<HTMLElement> {
+    return useCallback((): void => {
+        let input: HTMLInputElement | any = args.ref.current;
+
+        if (Number(input.value) < 0) {
+            input.value = "0";
+        } 
+        else if (Number(input.value) > args.reference_state) {
+            input.value.value = String(args.reference_state);
+        } 
+        else {
+            for (let index_ = 0; index_ < args.setStates.length, index_++;) {
+                let setStateAction: (value: React.SetStateAction<number>) => void = args.setStates[index_];
+                setStateAction(changeAmountCallback(
+                    input, 
+                    args.callback_args[index_].multiplier_, 
+                    args.callback_args[index_].digits_
+                ));
+            }
+        }
+    }, [])
+}
+
+const TOKEN_ETH_CONVERSION_RATE: number = 10000; // LT: will come from DB
 
 export default function TradingPage(): JSX.Element {
     const [available_tokens, setTokens] = useState<number>(shiftedRandom(60000, 30000, 5));
     const [available_donations, setDonations] = useState<number>(shiftedRandom(70000, 50000, 5));
     const [available_eth, setEth] = useState<number>(shiftedRandom(5, 0.5, 9));
-    // NOW: randomize default amounts
+    
     const redeem_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
     const withdraw_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
     const buy_tokens_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
@@ -29,16 +70,30 @@ export default function TradingPage(): JSX.Element {
 
     const redeemTokens = useCallback((): void => {
         let redeem_input: HTMLInputElement | any = redeem_input_ref.current;
-        setTokens(amount_ => Number((amount_ + Number(redeem_input.value)).toFixed(5)));
-        setDonations(amount_ => Number((amount_ - Number(redeem_input.value)).toFixed(5)));
+        
+        if (Number(redeem_input.value) < 0) {
+            redeem_input.value = "0";
+        } else if (Number(redeem_input.value) > available_donations) {
+            redeem_input.value = String(available_donations);
+        } else {
+            setTokens(changeAmountCallback(redeem_input, 1, 5));
+            setDonations(changeAmountCallback(redeem_input, -1, 5));
+        }
     }, []);
 
     const withdrawTokens = useCallback((): void => {
         let withdraw_input: HTMLInputElement | any = withdraw_input_ref.current;
-        setTokens(amount_ => Number((amount_ - Number(withdraw_input.value)).toFixed(5)));
+        // NOW: refactor this func into 1 th takes ref as arg
+        if (Number(withdraw_input.value) < 0) {
+            withdraw_input.value = "0";
+        } else if (Number(withdraw_input.value) > available_tokens) {
+            withdraw_input.value = String(available_tokens);
+        } else {
+            setTokens(changeAmountCallback(withdraw_input, -1, 5));
+        }
     }, []);
     
-    const buyTokens = useCallback((): void => { // /\: refactor these to accepts args as functions
+    const buyTokens = useCallback((): void => { // /\: refactor these to accepts args as functions -> ...changeAmountCallBack[] && ...(useState::setter)[]
         let redeem_input: HTMLInputElement | any = buy_tokens_input_ref.current;
         setTokens(amount_ => Number(
             (amount_ + Number(redeem_input.value) * TOKEN_ETH_CONVERSION_RATE).toFixed(5)
@@ -46,7 +101,7 @@ export default function TradingPage(): JSX.Element {
         setEth(amount_ => Number((amount_ - Number(redeem_input.value)).toFixed(9)));
     }, []);
 
-    const buyEth = useCallback((): void => { // /\: refactor these to accepts args as functions
+    const buyEth = useCallback((): void => {
         let redeem_input: HTMLInputElement | any = buy_tokens_input_ref.current;
         setTokens(amount_ => Number((amount_ - Number(redeem_input.value)).toFixed(5)));
         setEth(amount_ => Number(
@@ -97,7 +152,7 @@ export default function TradingPage(): JSX.Element {
                     />
                 })}
             </div>
-            <RedeemDonationsArea 
+            <RedeemDonationsArea // TD: max btn & label are not responsive when squeezing horizontally
                 available_donations={available_donations}
                 input_ref={redeem_input_ref}
                 maxOnClick={setInputValueToMax.bind(null, available_donations, redeem_input_ref)}
