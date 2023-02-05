@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import * as Data from "@/data";
 
 interface MaxButton {
     maxOnClick: React.MouseEventHandler<HTMLElement>,
@@ -82,5 +83,50 @@ export function RedeemDonationsArea(args: RedeemDonationsAreaArgs): JSX.Element 
                 Redeem
             </button>
         </div>
+    )
+}
+
+export function MenuRibbon({}): JSX.Element {
+    const [selected_menu_id, selectMenu] = React.useState<string>("trade-menu-icon"); // ??: integrate with Next
+
+    const updateMenuIcons = React.useCallback((event_: Event | any): void => { // /\: rewrite value & color checks to hooks
+        selectMenu(event_.target.id);
+    }, []);
+
+    useEffect(() => {
+        for (let icon_ of [...document.getElementsByTagName("i")].filter(element_ => {
+            return element_.id.includes("menu-icon")
+        })) {
+            console.log("looping through element")
+            if (icon_.id != selected_menu_id) {
+                icon_.style.color = "rgb(127, 255, 0)"; // change to default color (substitute w finally selected deft)
+            } else {
+                icon_.style.color = "rgb(255, 60, 0)";
+            }
+        }
+    }, [selected_menu_id]);
+
+    return (
+        <>
+            <div className="space"></div>
+            <i 
+                id="user-settings-menu-icon" 
+                className="far fa-user" 
+                style={Data.menu_icon_style} 
+                onClick={updateMenuIcons}
+            ></i>
+            <i 
+                id="investing-menu-icon" 
+                className="fas fa-chart-line" 
+                style={Data.menu_icon_style} 
+                onClick={updateMenuIcons}
+            ></i>
+            <i 
+                id="trade-menu-icon" 
+                className="fas fa-coins" 
+                style={Data.menu_icon_style} 
+                onClick={updateMenuIcons}
+            ></i>
+        </>
     )
 }

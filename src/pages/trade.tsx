@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea } from './areas';
+import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea, MenuRibbon } from './areas';
 
 class ChangeAmountCallBackArgs {
     constructor (
@@ -30,7 +30,7 @@ function changeAmountCallback(
         (amount_ + Number(reference_element_.value) * multiplier_).toFixed(digits_)
     )
 }
-
+// NOW: add menu ribbon & new link to inv pg
 const TOKEN_ETH_CONVERSION_RATE: number = 10000; // LT: will come from DB
 
 export default function TradingPage(): JSX.Element {
@@ -64,7 +64,7 @@ export default function TradingPage(): JSX.Element {
                 }
                 // input.value = "0"; // !: if this is in, only every second deduction is actually triggered
             }
-        }, [args.reference_state])
+        }, [args.reference_state, args.ref.current])
     }
 
     const redeemTokens: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
@@ -79,7 +79,7 @@ export default function TradingPage(): JSX.Element {
         [setTokens],
         [new ChangeAmountCallBackArgs(-1, 5)],
         withdraw_input_ref
-    ))
+    ));
     
     const buyTokens: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
         available_eth,
@@ -89,7 +89,7 @@ export default function TradingPage(): JSX.Element {
             new ChangeAmountCallBackArgs(-1, 9)
         ],
         buy_tokens_input_ref
-    ))
+    ));
 
     const buyEth: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
         available_tokens,
@@ -99,7 +99,7 @@ export default function TradingPage(): JSX.Element {
             new ChangeAmountCallBackArgs(1 / TOKEN_ETH_CONVERSION_RATE, 9)
         ],
         buy_eth_input_ref
-    ))
+    ));
     
     const setInputValueToMax = useCallback(
         (max_value_: number, ref_: React.MutableRefObject<HTMLInputElement|null>): void => {
@@ -110,54 +110,57 @@ export default function TradingPage(): JSX.Element {
     );
     
     return (
-        <div id="absolute-parent">
-            <div id="trade-area">
-                {[
-                    new TradeAreaArgs(
-                        "buy-tokens",
-                        "Buy tokens for ETH",
-                        `Available ETH: ${available_eth}`,
-                        "max-buy-with-eth",
-                        setInputValueToMax.bind(null, available_eth, buy_tokens_input_ref),
-                        buy_tokens_input_ref,
-                        buyTokens,
+        <div>
+            <div><MenuRibbon/></div>
+            <div id="interact-areas">
+                <div id="trade-area">
+                    {[
+                        new TradeAreaArgs(
+                            "buy-tokens",
+                            "Buy tokens for ETH",
+                            `Available ETH: ${available_eth}`,
+                            "max-buy-with-eth",
+                            setInputValueToMax.bind(null, available_eth, buy_tokens_input_ref),
+                            buy_tokens_input_ref,
+                            buyTokens,
 
-                    ),
-                    new TradeAreaArgs(
-                        "buy-eth",
-                        "Buy ETH for tokens",
-                        `Available tokens: ${available_tokens}`,
-                        "max-buy-with-tokens",
-                        setInputValueToMax.bind(null, available_tokens, buy_eth_input_ref),
-                        buy_eth_input_ref,
-                        buyEth,
-                    )
-                ].map(object_ => { // REPLACE WITH GENERATED OBJ <= ßUSESTATE
-                    return <TradeArea 
-                        button_id={object_.button_id}
-                        button_text={object_.button_text}
-                        info_text={object_.info_text}
-                        max_id={object_.max_id}
-                        maxOnClick={object_.maxOnClick}
-                        input_ref={object_.input_ref}
-                        invokeButton={object_.invokeButton}
-                    />
-                })}
+                        ),
+                        new TradeAreaArgs(
+                            "buy-eth",
+                            "Buy ETH for tokens",
+                            `Available tokens: ${available_tokens}`,
+                            "max-buy-with-tokens",
+                            setInputValueToMax.bind(null, available_tokens, buy_eth_input_ref),
+                            buy_eth_input_ref,
+                            buyEth,
+                        )
+                    ].map(object_ => { // REPLACE WITH GENERATED OBJ <= ßUSESTATE
+                        return <TradeArea 
+                            button_id={object_.button_id}
+                            button_text={object_.button_text}
+                            info_text={object_.info_text}
+                            max_id={object_.max_id}
+                            maxOnClick={object_.maxOnClick}
+                            input_ref={object_.input_ref}
+                            invokeButton={object_.invokeButton}
+                        />
+                    })}
+                </div>
+                <RedeemDonationsArea // TD: max btn & label are not responsive when squeezing horizontally
+                    available_donations={available_donations}
+                    input_ref={redeem_input_ref}
+                    maxOnClick={setInputValueToMax.bind(null, available_donations, redeem_input_ref)}
+                    invokeButton={redeemTokens}
+                />
+                <WithdrawArea 
+                    available_tokens={available_tokens} 
+                    maxOnClick={setInputValueToMax.bind(null, available_tokens, withdraw_input_ref)}
+                    input_ref={withdraw_input_ref}
+                    invokeButton={withdrawTokens}
+                />
             </div>
-            <RedeemDonationsArea // TD: max btn & label are not responsive when squeezing horizontally
-                available_donations={available_donations}
-                input_ref={redeem_input_ref}
-                maxOnClick={setInputValueToMax.bind(null, available_donations, redeem_input_ref)}
-                invokeButton={redeemTokens}
-            />
-            <WithdrawArea 
-                available_tokens={available_tokens} 
-                maxOnClick={setInputValueToMax.bind(null, available_tokens, withdraw_input_ref)}
-                input_ref={withdraw_input_ref}
-                invokeButton={withdrawTokens}
-            />
         </div>
     )
 }
 // TD: buy & sell buttons && withdraw tokens && redeem channel donations -> flexbox vertical 3
-// TD: user sh have ETH & token balance that change upon trading (& investing when I implement the second page)
+// MT: user sh have ETH & token balance that change upon trading (& investing when I implement the second page)

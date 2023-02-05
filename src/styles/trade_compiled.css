@@ -1,3 +1,4 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
 input[type=text] {
   background-color: black;
   color: chartreuse;
@@ -47,7 +48,7 @@ input[type=text] {
   color: red;
 }
 
-#absolute-parent {
+#interact-areas {
   height: 100vh;
   display: flex;
   flex-direction: row;
@@ -56,11 +57,11 @@ input[type=text] {
   vertical-align: middle;
   color: chartreuse;
 }
-#absolute-parent > * {
+#interact-areas > * {
   width: 33%;
   text-align: center;
 }
-#absolute-parent label {
+#interact-areas label {
   margin-right: 15px;
 }
 
