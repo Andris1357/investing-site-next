@@ -144,6 +144,10 @@ export const channels = [
     ),
 ];
 
+export const green_borders = "rgb(200,255,180) rgb(127,255,0) rgb(80,160,40) rgb(20,130,30)";
+export const red_borders = "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)";
+export const yellow_borders = "rgb(210, 230, 0) rgb(210, 255, 0) rgb(110, 130, 30) rgb(157, 147, 30)";
+
 export const metric_category_style = { // !: <span>.padding does not transfer to parent::<td>.padding
     minHeight: "50px", // /\: padding does not work -> try sth else | remove sub-titles
     maxHeight: "50px",
@@ -162,7 +166,7 @@ export const space_style = {
 };
 export const chart_button_selected_style = {
     color: "rgb(255, 60, 0)", 
-    borderColor: "rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35)"
+    borderColor: red_borders,
 };
 export const menu_icon_style = {
     color: "chartreuse",

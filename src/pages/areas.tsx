@@ -56,7 +56,7 @@ export function WithdrawArea(args: WithdrawAreaArgs): JSX.Element {
                     {`Available tokens: ${args.available_tokens}`}
                 </div>
             </div>
-            <button className="glowing-button" onClick={args.invokeButton}>
+            <button id="withdraw-tokens" className="glowing-button" onClick={args.invokeButton}>
                 Withdraw to your wallet
             </button>
         </div>
@@ -79,7 +79,7 @@ export function RedeemDonationsArea(args: RedeemDonationsAreaArgs): JSX.Element 
                     {`Available donations: ${args.available_donations}`}
                 </div>
             </div>
-            <button className="glowing-button" onClick={args.invokeButton}>
+            <button id="redeem-donations" className="glowing-button" onClick={args.invokeButton}>
                 Redeem
             </button>
         </div>

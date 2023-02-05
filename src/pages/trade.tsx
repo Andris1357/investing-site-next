@@ -1,5 +1,7 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea, MenuRibbon } from './areas';
+import { setColorEventListener, SetColorEventListenerArgs } from "@/pages/utility";
+import * as Data from "@/data";
 
 class ChangeAmountCallBackArgs {
     constructor (
@@ -32,6 +34,12 @@ function changeAmountCallback(
 }
 // NOW: add menu ribbon & new link to inv pg
 const TOKEN_ETH_CONVERSION_RATE: number = 10000; // LT: will come from DB
+const set_color_event_listener_args: SetColorEventListenerArgs[] = [
+    new SetColorEventListenerArgs("", Data.yellow_borders, "yellow", "mousedown"),
+    new SetColorEventListenerArgs("", Data.red_borders, "red", "mouseup"),
+    new SetColorEventListenerArgs("", Data.green_borders, "chartreuse", "mouseleave"),
+    new SetColorEventListenerArgs("", Data.red_borders, "red", "mouseenter"),
+]
 
 export default function TradingPage(): JSX.Element {
     const [available_tokens, setTokens] = useState<number>(shiftedRandom(60000, 30000, 5));
@@ -108,6 +116,15 @@ export default function TradingPage(): JSX.Element {
         }, 
         [available_tokens, available_donations, available_eth]
     );
+
+    useEffect(() => {
+        let buttons: Array<Element | any> = [...document.getElementsByClassName("glowing-button")];
+        for (let element_ of buttons) {
+            for (let arguments_ of set_color_event_listener_args) {
+                setColorEventListener({...arguments_, button_id_: element_.id})
+            }
+        }
+    }, [])
     
     return (
         <div>
