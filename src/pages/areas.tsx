@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
+import { useSelector } from 'react-redux';
 
 import { setColorEventListener, SetColorEventListenerArgs } from "./utility";
 import * as Data from "@/data";
@@ -21,7 +22,7 @@ interface WithdrawAreaArgs extends MaxButton {
 export class MenuRibbonArgs {
     constructor(public current_menu_id_: string) {}
 }
-
+// NOW: set redux::current_token_amount through these components
 export class TradeAreaArgs implements MaxButton {
     constructor (
         public button_id: string, 
@@ -95,6 +96,9 @@ export function RedeemDonationsArea(args: RedeemDonationsAreaArgs): JSX.Element 
 
 export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
     const [selected_menu_id, selectMenu] = React.useState<string>(args.current_menu_id_); // ??: integrate with Next
+    const currentTokenAmount = useSelector<number|any>(
+        state => state.current_token_amount
+    );
 
     const updateMenuIcons = React.useCallback((event_: Event | any): void => { // /\: rewrite value & color checks to hooks
         selectMenu(event_.target.id);
@@ -167,7 +171,7 @@ export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
 				<div className="space"></div>
 				<label htmlFor="token-balance" className="glowing-text">Token balance</label>
 				<div className="space"></div>
-				<input type="text" id="token-balance" disabled value="74992" />
+				<input type="text" id="token-balance" disabled value={`${currentTokenAmount}`}/>
             </div>        
         </div>
     )

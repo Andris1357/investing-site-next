@@ -1,8 +1,11 @@
 // NOW: link token balance on menu ribbon (after having inserted right side) to a Redux state & sync all pages
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
 import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea, MenuRibbon } from './areas';
 import { setColorEventListener, SetColorEventListenerArgs, shiftedRandom, changeAmountCallback } from "@/pages/utility";
 import * as Data from "@/data";
+import { AnyAction } from 'redux';
 
 class ChangeAmountCallBackArgs {
     constructor (
@@ -38,17 +41,18 @@ export default function TradingPage(): JSX.Element {
     const buy_tokens_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
     const buy_eth_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
 
+    const tokenAmountDispatch = useDispatch();
+    
     function setAmountUseCallback(args: SetAmountArgs): React.MouseEventHandler<HTMLElement> {
         return useCallback((): void => {
             let input: HTMLInputElement | any = args.ref.current;
             
             if (Number(input.value) < 0) {
                 input.value = "0";
-            } 
-            else if (Number(input.value) > args.reference_state) {
+            } else if (Number(input.value) > args.reference_state) {
                 input.value = String(args.reference_state);
-            } 
-            else {
+            } else {
+
                 for (let index_ = 0; index_ < args.setStates.length; index_++) {
                     let setStateAction: (value: React.SetStateAction<number>) => void = args.setStates[index_];
                     setStateAction(changeAmountCallback(
@@ -59,6 +63,11 @@ export default function TradingPage(): JSX.Element {
                 }
                 // input.value = "0"; // !: if this is in, only every second deduction is actually triggered
             }
+            // !: CURRENTLY ONLY SET TO THE AMOUNT BEFORE HAVING INVOKED THE ACTION
+            tokenAmountDispatch({ // TD: figure out its type and pass it as arg ßea state
+                type: "SET", 
+                payload: available_tokens
+            })
         }, [args.reference_state, args.ref.current])
     }
 

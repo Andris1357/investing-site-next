@@ -1,8 +1,6 @@
-// #menu-left-header {
-//     width: 50%;
-// }
 $padding-1: 10px;
 $border-1: 4px;
+// NOW: FIX MENU RIBBON UNWANTED FEATURE
 
 .glowing-text {
     color: chartreuse; 
@@ -17,10 +15,11 @@ $border-1: 4px;
 #menu-ribbon {
     display: flex;
     flex-direction: row;
-    height: 25px;
+    align-items: center;
 
     & > * {
         width: 50%;
+        height: 40px;
         padding: $padding-1;
     }
     #menu-left-header {

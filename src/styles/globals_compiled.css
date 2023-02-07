@@ -11,10 +11,11 @@
 #menu-ribbon {
   display: flex;
   flex-direction: row;
-  height: 25px;
+  align-items: center;
 }
 #menu-ribbon > * {
   width: 50%;
+  height: 40px;
   padding: 10px;
 }
 #menu-ribbon #menu-left-header {
