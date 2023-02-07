@@ -1,0 +1,28 @@
+.glowing-text {
+  color: chartreuse;
+  font-size: 14px;
+}
+
+.space {
+  width: 10px;
+  display: inline-block;
+}
+
+#menu-ribbon {
+  display: flex;
+  flex-direction: row;
+  height: 25px;
+}
+#menu-ribbon > * {
+  width: 50%;
+  padding: 10px;
+}
+#menu-ribbon #menu-left-header {
+  text-align: left;
+}
+#menu-ribbon #menu-right-header {
+  height: 30px;
+  text-align: right;
+}
+
+/*# sourceMappingURL=globals_compiled.css.map */

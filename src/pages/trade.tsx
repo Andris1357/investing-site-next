@@ -1,3 +1,4 @@
+// NOW: link token balance on menu ribbon (after having inserted right side) to a Redux state & sync all pages
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea, MenuRibbon } from './areas';
 import { setColorEventListener, SetColorEventListenerArgs, shiftedRandom, changeAmountCallback } from "@/pages/utility";

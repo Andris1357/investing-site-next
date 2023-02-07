@@ -123,7 +123,6 @@ export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
         for (let icon_ of [...document.getElementsByTagName("i")].filter(element_ => {
             return element_.id.includes("menu-icon")
         })) {
-            console.log("looping through element")
             if (icon_.id != selected_menu_id) {
                 icon_.style.color = "rgb(127, 255, 0)"; // change to default color (substitute w finally selected deft)
             } else {
@@ -131,32 +130,45 @@ export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
             }
         }
     }, [selected_menu_id]);
-
+    // TD: set width as 50% & insert right part of the ribbon
     return (
-        <>
-            <div className="space"></div>
-            <i 
-                id="user-settings-menu-icon" 
-                className="far fa-user" 
-                style={Data.menu_icon_style} 
-                onClick={updateMenuIcons}
-            ></i>
-            <Link href="/investing">
-                <i 
-                    id="investing-menu-icon" 
-                    className="fas fa-chart-line" 
-                    style={Data.menu_icon_style} 
-                    onClick={updateMenuIcons}
-                ></i>
-            </Link>
-            <Link href="/trade">
-                <i 
-                    id="trade-menu-icon" 
-                    className="fas fa-coins" 
-                    style={Data.menu_icon_style} 
-                    onClick={updateMenuIcons}
-                ></i>
-            </Link>
-        </>
+        <div id="menu-ribbon">
+            <div id="menu-left-header">
+                <div className="space"></div>
+                <Link href="/user_settings">
+                    <i 
+                        id="user-settings-menu-icon" 
+                        className="far fa-user" 
+                        style={Data.menu_icon_style} 
+                        onClick={updateMenuIcons}
+                    ></i>
+                </Link>
+                <Link href="/investing">
+                    <i 
+                        id="investing-menu-icon" 
+                        className="fas fa-chart-line" 
+                        style={Data.menu_icon_style} 
+                        onClick={updateMenuIcons}
+                    ></i>
+                </Link>
+                <Link href="/trade">
+                    <i 
+                        id="trade-menu-icon" 
+                        className="fas fa-coins" 
+                        style={Data.menu_icon_style} 
+                        onClick={updateMenuIcons}
+                    ></i>
+                </Link>
+            </div>
+            <div id="menu-right-header">
+				<label htmlFor="wallet-address" className="glowing-text">Wallet address</label>
+				<div className="space"></div>
+				<input type="text" id="wallet-address" disabled value="0x742d35Cc6634C0532925a3b844Bc454e4438f44e" />
+				<div className="space"></div>
+				<label htmlFor="token-balance" className="glowing-text">Token balance</label>
+				<div className="space"></div>
+				<input type="text" id="token-balance" disabled value="74992" />
+            </div>        
+        </div>
     )
 }
