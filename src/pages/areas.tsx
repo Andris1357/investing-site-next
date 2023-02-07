@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { setColorEventListener, SetColorEventListenerArgs } from "./utility";
 import * as Data from "@/data";
 
 interface MaxButton {
@@ -93,6 +94,25 @@ export function MenuRibbon({}): JSX.Element {
         selectMenu(event_.target.id);
     }, []);
 
+    useEffect(() => {
+        for (let icon_ of [...document.getElementsByTagName("i")].filter(element_ => {
+            return element_.id.includes("menu-icon")
+        })) {
+            setColorEventListener(new SetColorEventListenerArgs(
+                icon_.id,
+                "",
+                "yellow",
+                "mousedown"
+            ));
+            setColorEventListener(new SetColorEventListenerArgs(
+                icon_.id,
+                "",
+                "red",
+                "mouseup"
+            ))
+        }
+    }, [])
+    
     useEffect(() => {
         for (let icon_ of [...document.getElementsByTagName("i")].filter(element_ => {
             return element_.id.includes("menu-icon")
