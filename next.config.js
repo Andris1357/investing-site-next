@@ -2,21 +2,21 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  // async exportPathMap() {
-  //   return {
-  //     '/': { page: '/trade' },
-  //   }
-  // },
+  async exportPathMap() {
+    return {
+      '/': { page: '/trade' },
+    }
+  },
 
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/',
-  //       destination: '/trade',
-  //       permanent: true,
-  //     },
-  //   ]
-  // }
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/trade',
+        permanent: true,
+      },
+    ]
+  }
 }
 
 module.exports = nextConfig

@@ -7,6 +7,20 @@ export class SetColorEventListenerArgs {
     ) {}
 }
 
+export function shiftedRandom(range_: number, offset_: number, digits_: number): number {
+    return Number((Math.random() * range_ + offset_).toFixed(digits_))
+}
+
+export function changeAmountCallback(
+    reference_element_: HTMLInputElement | any,
+    multiplier_: number, 
+    digits_: number
+): (amount_: number) => number {
+    return amount_ => Number(
+        (amount_ + Number(reference_element_.value) * multiplier_).toFixed(digits_)
+    )
+}
+
 export function setColorEventListener(args: SetColorEventListenerArgs): void {
     let element: HTMLElement | any = document.getElementById(args.button_id_);
     let callable = (): void => {

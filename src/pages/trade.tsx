@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea, MenuRibbon } from './areas';
-import { setColorEventListener, SetColorEventListenerArgs } from "@/pages/utility";
+import { setColorEventListener, SetColorEventListenerArgs, shiftedRandom, changeAmountCallback } from "@/pages/utility";
 import * as Data from "@/data";
 
 class ChangeAmountCallBackArgs {
@@ -17,20 +17,6 @@ class SetAmountArgs {
         public callback_args: ChangeAmountCallBackArgs[],
         public ref: React.MutableRefObject<HTMLInputElement|null>,
     ) {}
-}
-
-function shiftedRandom(range_: number, offset_: number, digits_: number): number {
-    return Number((Math.random() * range_ + offset_).toFixed(digits_))
-}
-
-function changeAmountCallback(
-    reference_element_: HTMLInputElement | any,
-    multiplier_: number, 
-    digits_: number
-): (amount_: number) => number {
-    return amount_ => Number(
-        (amount_ + Number(reference_element_.value) * multiplier_).toFixed(digits_)
-    )
 }
 // NOW: add menu ribbon & new link to inv pg
 const TOKEN_ETH_CONVERSION_RATE: number = 10000; // LT: will come from DB
@@ -128,7 +114,7 @@ export default function TradingPage(): JSX.Element {
     
     return (
         <div>
-            <div><MenuRibbon/></div>
+            <div><MenuRibbon current_menu_id_="trade-menu-icon"/></div>
             <div id="interact-areas">
                 <div id="trade-area">
                     {[

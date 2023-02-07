@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import Link from "next/link";
+
 import { setColorEventListener, SetColorEventListenerArgs } from "./utility";
 import * as Data from "@/data";
 
@@ -14,6 +16,10 @@ interface RedeemDonationsAreaArgs extends MaxButton {
 
 interface WithdrawAreaArgs extends MaxButton {
     available_tokens: number,
+}
+
+export class MenuRibbonArgs {
+    constructor(public current_menu_id_: string) {}
 }
 
 export class TradeAreaArgs implements MaxButton {
@@ -87,8 +93,8 @@ export function RedeemDonationsArea(args: RedeemDonationsAreaArgs): JSX.Element 
     )
 }
 
-export function MenuRibbon({}): JSX.Element {
-    const [selected_menu_id, selectMenu] = React.useState<string>("trade-menu-icon"); // ??: integrate with Next
+export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
+    const [selected_menu_id, selectMenu] = React.useState<string>(args.current_menu_id_); // ??: integrate with Next
 
     const updateMenuIcons = React.useCallback((event_: Event | any): void => { // /\: rewrite value & color checks to hooks
         selectMenu(event_.target.id);
@@ -135,18 +141,22 @@ export function MenuRibbon({}): JSX.Element {
                 style={Data.menu_icon_style} 
                 onClick={updateMenuIcons}
             ></i>
-            <i 
-                id="investing-menu-icon" 
-                className="fas fa-chart-line" 
-                style={Data.menu_icon_style} 
-                onClick={updateMenuIcons}
-            ></i>
-            <i 
-                id="trade-menu-icon" 
-                className="fas fa-coins" 
-                style={Data.menu_icon_style} 
-                onClick={updateMenuIcons}
-            ></i>
+            <Link href="/investing">
+                <i 
+                    id="investing-menu-icon" 
+                    className="fas fa-chart-line" 
+                    style={Data.menu_icon_style} 
+                    onClick={updateMenuIcons}
+                ></i>
+            </Link>
+            <Link href="/trade">
+                <i 
+                    id="trade-menu-icon" 
+                    className="fas fa-coins" 
+                    style={Data.menu_icon_style} 
+                    onClick={updateMenuIcons}
+                ></i>
+            </Link>
         </>
     )
 }
