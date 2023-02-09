@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea, MenuRibbon } from './areas';
 import { setColorEventListener, SetColorEventListenerArgs, shiftedRandom, changeAmountCallback } from "@/pages/utility";
 import * as Data from "@/data";
-import { AnyAction } from 'redux';
 
 class ChangeAmountCallBackArgs {
     constructor (
@@ -22,7 +21,7 @@ class SetAmountArgs {
         public ref: React.MutableRefObject<HTMLInputElement|null>,
     ) {}
 }
-// NOW: add menu ribbon & new link to inv pg
+
 const TOKEN_ETH_CONVERSION_RATE: number = 10000; // LT: will come from DB
 const set_color_event_listener_args: SetColorEventListenerArgs[] = [
     new SetColorEventListenerArgs("", Data.yellow_borders, "yellow", "mousedown"),
@@ -60,14 +59,8 @@ export default function TradingPage(): JSX.Element {
                         args.callback_args[index_].multiplier_, 
                         args.callback_args[index_].digits_
                     ));
-                }
-                // input.value = "0"; // !: if this is in, only every second deduction is actually triggered
+                } // input.value = "0"; // !: if this is in, only every second deduction is actually triggered
             }
-            // !: CURRENTLY ONLY SET TO THE AMOUNT BEFORE HAVING INVOKED THE ACTION
-            tokenAmountDispatch({ // TD: figure out its type and pass it as arg ßea state
-                type: "SET", 
-                payload: available_tokens
-            })
         }, [args.reference_state, args.ref.current])
     }
 
@@ -120,7 +113,14 @@ export default function TradingPage(): JSX.Element {
                 setColorEventListener({...arguments_, button_id_: element_.id})
             }
         }
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        tokenAmountDispatch({ // TD: figure out its type and pass it as arg ßea state
+            type: "SET", 
+            payload: available_tokens
+        })
+    }, [available_tokens]);
     
     return (
         <div>
