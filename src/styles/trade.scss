@@ -8,7 +8,7 @@ input[type=text] {
     background-color: black;
     color: chartreuse;
     line-height: 23px;
-    padding-right: 15px;
+    margin-right: 5px;
     width: 150px;
 }
 
@@ -42,10 +42,6 @@ input[type=text] {
         width: 145px;
     }
     .max-button {
-        position: absolute;
-        right: 10px;
-        top: 6px;
-        padding-left: 5px;
         border: none;
         background-color: black;
         color: chartreuse;
@@ -57,7 +53,6 @@ input[type=text] {
 }
 
 #interact-areas {
-    height: 100vh;
     display: flex;
     flex-direction: row;
     align-items: center;

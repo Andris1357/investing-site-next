@@ -1,3 +1,12 @@
+@media screen and (max-width: 800px), (orientation: landscape) {
+  .input-with-label {
+    display: block;
+  }
+}
+input[type=text] {
+  margin: 0 10px;
+}
+
 .glowing-text {
   color: chartreuse;
   font-size: 14px;
@@ -6,6 +15,31 @@
 .space {
   width: 10px;
   display: inline-block;
+}
+
+.input-with-label {
+  display: inline-block;
+}
+
+.label-wrapper {
+  display: inline-block;
+}
+
+.input-field {
+  position: relative;
+}
+.input-field .max-button {
+  position: absolute;
+  right: 18px;
+  top: 6px;
+}
+
+.absolute-parent {
+  height: 100vh;
+}
+
+.main-area {
+  height: calc(100vh - 40px);
 }
 
 #menu-ribbon {
@@ -24,6 +58,18 @@
 #menu-ribbon #menu-right-header {
   height: 30px;
   text-align: right;
+}
+
+#token-balance {
+  width: 90px;
+  border-width: 0;
+  font-size: 12px;
+}
+
+#wallet-address {
+  width: 220px;
+  font-size: 9px;
+  border-width: 0;
 }
 
 /*# sourceMappingURL=globals_compiled.css.map */

@@ -1,6 +1,17 @@
 $padding-1: 10px;
 $border-1: 4px;
+$menu-height: 40px;
 // NOW: FIX MENU RIBBON UNWANTED FEATURE
+
+@media screen and (max-width: 800px), (orientation: landscape) {
+    .input-with-label {
+        display: block;
+    }
+}
+
+input[type=text] {
+    margin: 0 10px;
+}
 
 .glowing-text {
     color: chartreuse; 
@@ -12,6 +23,32 @@ $border-1: 4px;
     display: inline-block;
 }
 
+.input-with-label {
+    display: inline-block;
+}
+
+.label-wrapper {
+    display: inline-block;
+}
+
+.input-field {
+    position: relative;
+
+    .max-button {
+        position: absolute;
+        right: 18px;
+        top: 6px;
+    }
+}
+
+.absolute-parent {
+    height: 100vh;
+}
+
+.main-area {
+    height: calc(100vh - $menu-height);
+}
+
 #menu-ribbon {
     display: flex;
     flex-direction: row;
@@ -19,7 +56,7 @@ $border-1: 4px;
 
     & > * {
         width: 50%;
-        height: 40px;
+        height: $menu-height;
         padding: $padding-1;
     }
     #menu-left-header {
@@ -29,4 +66,16 @@ $border-1: 4px;
         height: 30px;
         text-align: right;
     }
+}
+
+#token-balance {
+    width: 90px;
+    border-width: 0;
+    font-size: 12px;
+}
+
+#wallet-address {
+    width: 220px;
+    font-size: 9px;
+    border-width: 0;
 }

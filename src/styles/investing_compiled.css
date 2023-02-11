@@ -1,0 +1,12 @@
+#investing-areas {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: chartreuse;
+  background-color: black;
+}
+#investing-areas #data-area, #investing-areas #chart-area {
+  width: 50%;
+}
+
+/*# sourceMappingURL=investing_compiled.css.map */

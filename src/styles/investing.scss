@@ -1,0 +1,11 @@
+#investing-areas {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: chartreuse;
+    background-color: black;
+
+    #data-area, #chart-area {
+        width: 50%;
+    }
+}

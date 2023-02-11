@@ -4,10 +4,9 @@ import { useSelector } from 'react-redux';
 
 import { setColorEventListener, SetColorEventListenerArgs } from "./utility";
 import * as Data from "@/data";
+import { InputFieldIF, InputField } from "./elements";
 
-interface MaxButton {
-    maxOnClick: React.MouseEventHandler<HTMLElement>,
-    input_ref: React.MutableRefObject<HTMLInputElement|null>,
+interface MaxButton extends InputFieldIF {
     invokeButton: React.MouseEventHandler<HTMLElement>,
 }
 
@@ -22,13 +21,15 @@ interface WithdrawAreaArgs extends MaxButton {
 export class MenuRibbonArgs {
     constructor(public current_menu_id_: string) {}
 }
-// NOW: set redux::current_token_amount through these components
+
 export class TradeAreaArgs implements MaxButton {
     constructor (
         public button_id: string, 
         public button_text: string, 
         public info_text: string,
         public max_id: string,
+        public label_text: string,
+        public input_id: string,
         public maxOnClick: React.MouseEventHandler<HTMLElement>,
         public input_ref: React.MutableRefObject<HTMLInputElement|null>,
         public invokeButton: React.MouseEventHandler<HTMLElement>,
@@ -39,11 +40,12 @@ export function TradeArea(args: TradeAreaArgs): JSX.Element {
     return (
         <div>
             <div className="input-with-max">
-                <label htmlFor="amount-input">Enter amount:</label>
-                <input id="amount-input" type="text" ref={args.input_ref} defaultValue={0}></input>
-                <button id={args.max_id} className="max-button" onClick={args.maxOnClick}>
-                    MAX
-                </button>
+                <InputField 
+                    label_text={args.label_text}
+                    input_id={args.input_id} 
+                    maxOnClick={args.maxOnClick} 
+                    input_ref={args.input_ref}
+                />
                 <div className="available-amount">{args.info_text}</div>
             </div>
             <button id={args.button_id} className="glowing-button" onClick={args.invokeButton}>
@@ -57,9 +59,12 @@ export function WithdrawArea(args: WithdrawAreaArgs): JSX.Element {
     return (
         <div>
             <div className="input-with-max">
-                <label htmlFor="amount-to-withdraw">Enter amount to withdraw:</label>
-                <input id="amount-to-withdraw" type="text" ref={args.input_ref} defaultValue={0}></input>
-                <button className="max-button" onClick={args.maxOnClick}>MAX</button>
+                <InputField 
+                    label_text={args.label_text}
+                    input_id={args.input_id} 
+                    maxOnClick={args.maxOnClick} 
+                    input_ref={args.input_ref}
+                />
                 <div className="available-amount">
                     {`Available tokens: ${args.available_tokens}`}
                 </div>
@@ -75,14 +80,12 @@ export function RedeemDonationsArea(args: RedeemDonationsAreaArgs): JSX.Element 
     return (
         <div>
             <div className="input-with-max">
-                <label htmlFor="amount-to-redeem">Enter amount to redeem:</label>
-                <input 
-                    id="amount-to-redeem" 
-                    type="text" 
-                    ref={args.input_ref}
-                    defaultValue={0}
-                ></input>
-                <button className="max-button" onClick={args.maxOnClick}>MAX</button>
+                <InputField 
+                    label_text={args.label_text}
+                    input_id={args.input_id} 
+                    maxOnClick={args.maxOnClick} 
+                    input_ref={args.input_ref}
+                />
                 <div className="available-amount">
                     {`Available donations: ${args.available_donations}`}
                 </div>
@@ -165,13 +168,18 @@ export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
                 </Link>
             </div>
             <div id="menu-right-header">
-				<label htmlFor="wallet-address" className="glowing-text">Wallet address</label>
-				<div className="space"></div>
-				<input type="text" id="wallet-address" disabled value="0x742d35Cc6634C0532925a3b844Bc454e4438f44e" />
-				<div className="space"></div>
-				<label htmlFor="token-balance" className="glowing-text">Token balance</label>
-				<div className="space"></div>
-				<input type="text" id="token-balance" disabled value={`${currentTokenAmount}`}/>
+                <div className="input-with-label">
+                    <div className="label-wrapper">
+                        <label htmlFor="wallet-address" className="glowing-text">Wallet address</label>
+                    </div>
+                    <input type="text" id="wallet-address" disabled value="0x742d35Cc6634C0532925a3b844Bc454e4438f44e" />
+                </div>
+                <div className="input-with-label">
+                    <div className="label-wrapper">
+                        <label htmlFor="token-balance" className="glowing-text">Token balance</label>
+                    </div>
+                    <input type="text" id="token-balance" disabled value={`${currentTokenAmount}`}/>
+                </div>
             </div>        
         </div>
     )

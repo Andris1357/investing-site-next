@@ -114,7 +114,7 @@ export default function TradingPage(): JSX.Element {
             }
         }
     }, []);
-
+    // NOW: fix max btn placement
     useEffect(() => {
         tokenAmountDispatch({ // TD: figure out its type and pass it as arg ßea state
             type: "SET", 
@@ -123,9 +123,9 @@ export default function TradingPage(): JSX.Element {
     }, [available_tokens]);
     
     return (
-        <div>
+        <div className="absolute-parent">
             <div><MenuRibbon current_menu_id_="trade-menu-icon"/></div>
-            <div id="interact-areas">
+            <div id="interact-areas"  className="main-area">
                 <div id="trade-area">
                     {[
                         new TradeAreaArgs(
@@ -133,16 +133,19 @@ export default function TradingPage(): JSX.Element {
                             "Buy tokens for ETH",
                             `Available ETH: ${available_eth}`,
                             "max-buy-with-eth",
+                            "Enter amount:",
+                            "buy-tokens-input",
                             setInputValueToMax.bind(null, available_eth, buy_tokens_input_ref),
                             buy_tokens_input_ref,
                             buyTokens,
-
                         ),
                         new TradeAreaArgs(
                             "buy-eth",
                             "Buy ETH for tokens",
                             `Available tokens: ${available_tokens}`,
                             "max-buy-with-tokens",
+                            "Enter amount:",
+                            "buy-eth-input",
                             setInputValueToMax.bind(null, available_tokens, buy_eth_input_ref),
                             buy_eth_input_ref,
                             buyEth,
@@ -153,6 +156,8 @@ export default function TradingPage(): JSX.Element {
                             button_text={object_.button_text}
                             info_text={object_.info_text}
                             max_id={object_.max_id}
+                            label_text={object_.label_text}
+                            input_id={object_.input_id}
                             maxOnClick={object_.maxOnClick}
                             input_ref={object_.input_ref}
                             invokeButton={object_.invokeButton}
@@ -161,12 +166,16 @@ export default function TradingPage(): JSX.Element {
                 </div>
                 <RedeemDonationsArea // TD: max btn & label are not responsive when squeezing horizontally
                     available_donations={available_donations}
+                    label_text="Enter amount to redeem:"
+                    input_id="amount-to-redeem" 
                     input_ref={redeem_input_ref}
                     maxOnClick={setInputValueToMax.bind(null, available_donations, redeem_input_ref)}
                     invokeButton={redeemTokens}
                 />
                 <WithdrawArea 
                     available_tokens={available_tokens} 
+                    label_text="Enter amount to withdraw:"
+                    input_id="amount-to-withdraw"
                     maxOnClick={setInputValueToMax.bind(null, available_tokens, withdraw_input_ref)}
                     input_ref={withdraw_input_ref}
                     invokeButton={withdrawTokens}
