@@ -1,4 +1,3 @@
-// NOW: link token balance on menu ribbon (after having inserted right side) to a Redux state & sync all pages
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -40,7 +39,7 @@ export default function TradingPage(): JSX.Element {
     const buy_tokens_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
     const buy_eth_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
 
-    const tokenAmountDispatch = useDispatch();
+    const dispatchGlobalState = useDispatch();
     
     function setAmountUseCallback(args: SetAmountArgs): React.MouseEventHandler<HTMLElement> {
         return useCallback((): void => {
@@ -99,7 +98,10 @@ export default function TradingPage(): JSX.Element {
     ));
     
     const setInputValueToMax = useCallback(
-        (max_value_: number, ref_: React.MutableRefObject<HTMLInputElement|null>): void => {
+        function (
+            max_value_: number, 
+            ref_: React.MutableRefObject<HTMLInputElement|null>
+        ): void {
             let input_element: HTMLInputElement | any = ref_.current;
             input_element.value = String(max_value_);
         }, 
@@ -114,10 +116,10 @@ export default function TradingPage(): JSX.Element {
             }
         }
     }, []);
-    // NOW: fix max btn placement
+    
     useEffect(() => {
-        tokenAmountDispatch({ // TD: figure out its type and pass it as arg ßea state
-            type: "SET", 
+        dispatchGlobalState({ // TD: figure out its type and pass it as arg ßea state
+            type: "SET_TOKENS", 
             payload: available_tokens
         })
     }, [available_tokens]);

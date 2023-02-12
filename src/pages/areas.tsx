@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { useSelector } from 'react-redux';
 
-import { setColorEventListener, SetColorEventListenerArgs } from "./utility";
+import { setColorEventListener, SetColorEventListenerArgs, getMenuIcons } from "./utility";
 import * as Data from "@/data";
 import { InputFieldIF, InputField } from "./elements";
+import { GlobalState } from "@/store";
 
 interface MaxButton extends InputFieldIF {
     invokeButton: React.MouseEventHandler<HTMLElement>,
@@ -99,7 +100,7 @@ export function RedeemDonationsArea(args: RedeemDonationsAreaArgs): JSX.Element 
 
 export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
     const [selected_menu_id, selectMenu] = React.useState<string>(args.current_menu_id_); // ??: integrate with Next
-    const currentTokenAmount = useSelector<number|any>(
+    const current_token_amount_selector = useSelector<GlobalState>(
         state => state.current_token_amount
     );
 
@@ -108,9 +109,7 @@ export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
     }, []);
 
     useEffect(() => {
-        for (let icon_ of [...document.getElementsByTagName("i")].filter(element_ => {
-            return element_.id.includes("menu-icon")
-        })) {
+        for (let icon_ of getMenuIcons()) {
             setColorEventListener(new SetColorEventListenerArgs(
                 icon_.id,
                 "",
@@ -122,14 +121,12 @@ export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
                 "",
                 "red",
                 "mouseup"
-            ))
+            ));
         }
     }, [])
     
     useEffect(() => {
-        for (let icon_ of [...document.getElementsByTagName("i")].filter(element_ => {
-            return element_.id.includes("menu-icon")
-        })) {
+        for (let icon_ of getMenuIcons()) {
             if (icon_.id != selected_menu_id) {
                 icon_.style.color = "rgb(127, 255, 0)"; // change to default color (substitute w finally selected deft)
             } else {
@@ -137,7 +134,7 @@ export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
             }
         }
     }, [selected_menu_id]);
-    // TD: set width as 50% & insert right part of the ribbon
+    
     return (
         <div id="menu-ribbon">
             <div id="menu-left-header">
@@ -178,7 +175,7 @@ export function MenuRibbon(args: MenuRibbonArgs): JSX.Element {
                     <div className="label-wrapper">
                         <label htmlFor="token-balance" className="glowing-text">Token balance</label>
                     </div>
-                    <input type="text" id="token-balance" disabled value={`${currentTokenAmount}`}/>
+                    <input type="text" id="token-balance" disabled value={`${current_token_amount_selector}`}/>
                 </div>
             </div>        
         </div>

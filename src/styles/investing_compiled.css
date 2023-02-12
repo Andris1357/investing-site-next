@@ -1,3 +1,7 @@
+#investing-areas #chart-area, #investing-areas #data-area {
+  width: calc(50% - 30px);
+}
+
 #investing-areas {
   display: flex;
   flex-direction: row;
@@ -5,8 +9,11 @@
   color: chartreuse;
   background-color: black;
 }
-#investing-areas #data-area, #investing-areas #chart-area {
-  width: 50%;
+#investing-areas #data-area {
+  margin-left: 30px;
+}
+#investing-areas #chart-area {
+  margin-right: 30px;
 }
 
 /*# sourceMappingURL=investing_compiled.css.map */

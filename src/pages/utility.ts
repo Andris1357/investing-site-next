@@ -7,7 +7,11 @@ export class SetColorEventListenerArgs {
     ) {}
 }
 
-export function shiftedRandom(range_: number, offset_: number, digits_: number): number {
+export function shiftedRandom(
+    range_: number, 
+    offset_: number, 
+    digits_: number
+): number {
     return Number((Math.random() * range_ + offset_).toFixed(digits_))
 }
 
@@ -28,4 +32,12 @@ export function setColorEventListener(args: SetColorEventListenerArgs): void {
         element.style.color = args.font_;
     }
     element.addEventListener(args.event_, callable);
+}
+
+export function getMenuIcons(): HTMLElement[] {
+    return [...document.getElementsByTagName("i")].filter(
+        (element_: HTMLElement): boolean => {
+            return element_.id.includes("menu-icon")
+        }
+    )
 }

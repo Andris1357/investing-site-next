@@ -19,6 +19,7 @@ input[type=text] {
 
 .input-with-label {
   display: inline-block;
+  margin-left: 8px;
 }
 
 .label-wrapper {

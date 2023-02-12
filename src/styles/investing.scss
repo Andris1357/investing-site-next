@@ -1,3 +1,9 @@
+$main-area-margin: 30px;
+
+%main-area {
+    width: calc(50% - $main-area-margin);
+}
+
 #investing-areas {
     display: flex;
     flex-direction: row;
@@ -5,7 +11,12 @@
     color: chartreuse;
     background-color: black;
 
-    #data-area, #chart-area {
-        width: 50%;
+    #data-area {
+        @extend %main-area;
+        margin-left: $main-area-margin;
+    }
+    #chart-area {
+        @extend %main-area;
+        margin-right: $main-area-margin;
     }
 }

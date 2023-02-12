@@ -1,28 +1,38 @@
 import { createStore, Store, Action } from 'redux'; // TD: use redux toolkit
 
-interface TokenState {
-  current_token_amount: number;
+export interface GlobalState {
+    current_token_amount: number;
+    current_channel_index: number;
 }
 
-interface TokenAction extends Action {
-    payload: any;
+interface GlobalSetAction extends Action {
+    payload: number;
 }
 
-const initialState: TokenState = {
-  current_token_amount: 0
+const initial_state: GlobalState = {
+    current_token_amount: 0,
+    current_channel_index: 0,
 };
 
-const tokenReducer = (state = initialState, action: TokenAction) => {
+const setGlobalState = (
+    state = initial_state, 
+    action: GlobalSetAction
+): GlobalState => {
     switch (action.type) {
-        case 'SET':
+        case "SET_TOKENS":
             return {
                 ...state,
                 current_token_amount: action.payload
             };
+        case "SET_CHANNEL":
+            return {
+                ...state,
+                current_channel_index: action.payload
+            }
         default:
            return state;
     }
 };
 
-const store: Store<TokenState, TokenAction> = createStore(tokenReducer);
+const store: Store<GlobalState, GlobalSetAction> = createStore(setGlobalState);
 export default store;
