@@ -2,14 +2,15 @@
 // NOW: refactor code from components.jsx into investing.tsx
 import { MenuRibbon } from "./areas";
 import { useDispatch, useSelector } from "react-redux";
-import { GlobalState } from "@/store";
+import store, { GlobalState } from "@/store";
 import { useEffect, useState } from "react";
+import { ChannelHeader } from "./elements";
 
 export default function InvestingPage({}): JSX.Element {
     const dispatchGlobalState = useDispatch();
-    const current_channel_selector = useSelector<GlobalState>(state => state.current_channel_index);
+    const current_channel_selector = useSelector((state: GlobalState): number => state.current_channel_index);
     
-    const [current_channel_index, selectChannel] = useState<number|unknown>(current_channel_selector);
+    const [current_channel_index, selectChannel] = useState<number>(current_channel_selector);
 
     useEffect(() => {
         dispatchGlobalState({
@@ -24,18 +25,23 @@ export default function InvestingPage({}): JSX.Element {
             <div id="investing-areas" className="main-area">
                 <div id="data-area">
                     <div id="channel-data">
+                        <ChannelHeader channel_index_={current_channel_index}/>
                         <div>data<br/>current_channel:{`${current_channel_selector}`}</div>
                     </div>
                     <div id="investing-actions">actions</div>
                 </div>
                 <div id="chart-area">
                     chart
-                    <button onClick={
+                    <button id="arrow-button" className="glowing-button" onClick={
                         () => selectChannel((current_index_: number): number => current_index_ - 1)
-                    }> -1 </button>
-                    <button onClick={
+                    }>
+                        <i className="fas fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button id="arrow-button" className="glowing-button" onClick={
                         () => selectChannel((current_index_: number): number => current_index_ + 1)
-                    }> +1 </button>
+                    }>
+                        <i className="fas fa-solid fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>

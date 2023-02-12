@@ -12,21 +12,6 @@ input[type=text] {
     width: 150px;
 }
 
-.glowing-button {
-    background-color: black;
-    color: chartreuse;
-    border-width: 3px;
-    border-color: $green_borders;
-    border-radius: 1px;
-    margin: 15px 5px;
-    padding: 7px;
-
-    &:hover {
-        border-color: $red_borders;
-        color: rgb(255, 60, 0);
-    }
-}
-
 .input-with-max {
     position: relative;
     margin-bottom: 20px;

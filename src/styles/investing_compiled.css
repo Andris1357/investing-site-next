@@ -1,3 +1,4 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
 #investing-areas #chart-area, #investing-areas #data-area {
   width: calc(50% - 30px);
 }
@@ -14,6 +15,27 @@
 }
 #investing-areas #chart-area {
   margin-right: 30px;
+}
+
+#arrow-button {
+  height: 27px;
+  vertical-align: middle;
+  padding: 4px 7px;
+}
+
+.channel-img {
+  border-radius: 15px;
+  vertical-align: middle; /*maybe best inside of table so that text can start at the top */
+  width: 60px;
+  height: 60px;
+}
+
+.channel-name {
+  vertical-align: middle;
+}
+
+.channel-header {
+  margin: "0px";
 }
 
 /*# sourceMappingURL=investing_compiled.css.map */

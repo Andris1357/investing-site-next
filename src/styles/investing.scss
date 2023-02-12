@@ -1,3 +1,5 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
+
 $main-area-margin: 30px;
 
 %main-area {
@@ -19,4 +21,25 @@ $main-area-margin: 30px;
         @extend %main-area;
         margin-right: $main-area-margin;
     }
+}
+
+#arrow-button { // I: it is valid to give the same id to different HTML elements!
+    height: 27px;
+    vertical-align: middle;
+    padding: 4px 7px;
+}
+
+.channel-img {
+    border-radius: 15px;
+    vertical-align: middle; /*maybe best inside of table so that text can start at the top */
+    width: 60px;
+    height: 60px
+}
+
+.channel-name {
+    vertical-align: middle;
+}
+
+.channel-header {
+    margin: "0px";
 }

@@ -12,6 +12,20 @@ input[type=text] {
   font-size: 14px;
 }
 
+.glowing-button {
+  background-color: black;
+  color: chartreuse;
+  border-width: 3px;
+  border-color: rgb(200, 255, 180) rgb(127, 255, 0) rgb(80, 160, 40) rgb(20, 130, 30);
+  border-radius: 1px;
+  margin: 15px 5px;
+  padding: 7px;
+}
+.glowing-button:hover {
+  border-color: rgb(255, 180, 180) rgb(245, 130, 70) rgb(180, 20, 20) rgb(210, 40, 35);
+  color: rgb(255, 60, 0);
+}
+
 .space {
   width: 10px;
   display: inline-block;
