@@ -3,8 +3,9 @@
 import { MenuRibbon } from "./areas";
 import { useDispatch, useSelector } from "react-redux";
 import store, { GlobalState } from "@/store";
-import { useEffect, useState } from "react";
-import { ChannelHeader } from "./elements";
+import React, { useEffect, useState } from "react";
+import { ChannelHeader, Table, DisabledTextbox } from "./elements";
+import * as Data from "../data";
 
 export default function InvestingPage({}): JSX.Element {
     const dispatchGlobalState = useDispatch();
@@ -26,7 +27,23 @@ export default function InvestingPage({}): JSX.Element {
                 <div id="data-area">
                     <div id="channel-data">
                         <ChannelHeader channel_index_={current_channel_index}/>
+                        <p id="statistics-title"><strong>Channel statistics</strong></p>
+                        <hr />
+                        {/* NOW: insert Table elements wrapped into functions (they have hardcoded stuff anyways mostly) */}
                         <div>data<br/>current_channel:{`${current_channel_selector}`}</div>
+                        <Table rows_content={[
+                            [
+                                React.createElement("label", {htmlFor: "stats-score"}, "Platform score"), 
+                                <DisabledTextbox 
+                                    element_id_={"stats-score"} 
+                                    value_={Data.channels[current_channel_index].score}
+                                />
+                            ],
+                            [
+                                React.createElement("label", {htmlFor: "stats-date"}, "Last updated"), 
+                                <DisabledTextbox element_id_={"stats-date"} value_={Data.last_updated}/>
+                            ]
+                        ]}/>
                     </div>
                     <div id="investing-actions">actions</div>
                 </div>

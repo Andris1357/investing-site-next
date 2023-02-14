@@ -1,3 +1,5 @@
+import { SetStateAction } from "react";
+
 export class SetColorEventListenerArgs {
     constructor (
         public button_id_: string, 
@@ -18,8 +20,8 @@ export function shiftedRandom(
 export function changeAmountCallback(
     reference_element_: HTMLInputElement | any,
     multiplier_: number, 
-    digits_: number
-): (amount_: number) => number {
+    digits_: number,
+): SetStateAction<number> {
     return amount_ => Number(
         (amount_ + Number(reference_element_.value) * multiplier_).toFixed(digits_)
     )

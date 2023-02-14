@@ -1,9 +1,16 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { TradeAreaArgs, TradeArea, RedeemDonationsArea, WithdrawArea, MenuRibbon } from './areas';
-import { setColorEventListener, SetColorEventListenerArgs, shiftedRandom, changeAmountCallback } from "@/pages/utility";
+import { 
+    setColorEventListener, 
+    SetColorEventListenerArgs, 
+    shiftedRandom, 
+    changeAmountCallback,
+} from "@/pages/utility";
 import * as Data from "@/data";
+import { GlobalState, GlobalSetAction } from '@/store';
+import { Dispatch } from 'react';
 
 class ChangeAmountCallBackArgs {
     constructor (
@@ -18,10 +25,15 @@ class SetAmountArgs {
         public setStates: Array<(value: React.SetStateAction<number>) => void>,
         public callback_args: ChangeAmountCallBackArgs[],
         public ref: React.MutableRefObject<HTMLInputElement|null>,
+        public redux_set_action?: string | null,
     ) {}
 }
 
 const TOKEN_ETH_CONVERSION_RATE: number = 10000; // LT: will come from DB
+const random_token_amount: number = shiftedRandom(60000, 30000, 5);
+const random_donations_amount: number = shiftedRandom(70000, 50000, 5);
+const random_eth_amount: number = shiftedRandom(5, 0.5, 9);
+
 const set_color_event_listener_args: SetColorEventListenerArgs[] = [
     new SetColorEventListenerArgs("", Data.yellow_borders, "yellow", "mousedown"),
     new SetColorEventListenerArgs("", Data.red_borders, "red", "mouseup"),
@@ -30,17 +42,18 @@ const set_color_event_listener_args: SetColorEventListenerArgs[] = [
 ]
 
 export default function TradingPage(): JSX.Element {
-    const [available_tokens, setTokens] = useState<number>(shiftedRandom(60000, 30000, 5));
-    const [available_donations, setDonations] = useState<number>(shiftedRandom(70000, 50000, 5));
-    const [available_eth, setEth] = useState<number>(shiftedRandom(5, 0.5, 9));
+    const dispatchGlobalState: Dispatch<GlobalSetAction> = useDispatch();
+    const token_amount_selector: number = useSelector((state: GlobalState): number => state.current_token_amount);
+    
+    const [available_tokens, setTokens] = useState<number>(random_token_amount);
+    const [available_donations, setDonations] = useState<number>(random_donations_amount);
+    const [available_eth, setEth] = useState<number>(random_eth_amount);
     
     const redeem_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
     const withdraw_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
     const buy_tokens_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
     const buy_eth_input_ref: React.MutableRefObject<HTMLInputElement|null> = useRef(null);
 
-    const dispatchGlobalState = useDispatch();
-    
     function setAmountUseCallback(args: SetAmountArgs): React.MouseEventHandler<HTMLElement> {
         return useCallback((): void => {
             let input: HTMLInputElement | any = args.ref.current;
@@ -71,7 +84,7 @@ export default function TradingPage(): JSX.Element {
     ));
 
     const withdrawTokens: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
-        available_tokens,
+        token_amount_selector,
         [setTokens],
         [new ChangeAmountCallBackArgs(-1, 5)],
         withdraw_input_ref
@@ -88,7 +101,7 @@ export default function TradingPage(): JSX.Element {
     ));
 
     const buyEth: React.MouseEventHandler<HTMLElement> = setAmountUseCallback(new SetAmountArgs(
-        available_tokens,
+        token_amount_selector,
         [setTokens, setEth],
         [
             new ChangeAmountCallBackArgs(-1, 5),
@@ -105,7 +118,7 @@ export default function TradingPage(): JSX.Element {
             let input_element: HTMLInputElement | any = ref_.current;
             input_element.value = String(max_value_);
         }, 
-        [available_tokens, available_donations, available_eth]
+        [token_amount_selector, available_donations, available_eth]
     );
 
     useEffect(() => {
@@ -144,11 +157,11 @@ export default function TradingPage(): JSX.Element {
                         new TradeAreaArgs(
                             "buy-eth",
                             "Buy ETH for tokens",
-                            `Available tokens: ${available_tokens}`,
+                            `Available tokens: ${token_amount_selector}`,
                             "max-buy-with-tokens",
                             "Enter amount:",
                             "buy-eth-input",
-                            setInputValueToMax.bind(null, available_tokens, buy_eth_input_ref),
+                            setInputValueToMax.bind(null, token_amount_selector, buy_eth_input_ref),
                             buy_eth_input_ref,
                             buyEth,
                         )
@@ -175,10 +188,10 @@ export default function TradingPage(): JSX.Element {
                     invokeButton={redeemTokens}
                 />
                 <WithdrawArea 
-                    available_tokens={available_tokens} 
+                    available_tokens={token_amount_selector} 
                     label_text="Enter amount to withdraw:"
                     input_id="amount-to-withdraw"
-                    maxOnClick={setInputValueToMax.bind(null, available_tokens, withdraw_input_ref)}
+                    maxOnClick={setInputValueToMax.bind(null, token_amount_selector, withdraw_input_ref)}
                     input_ref={withdraw_input_ref}
                     invokeButton={withdrawTokens}
                 />

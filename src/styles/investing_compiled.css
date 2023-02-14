@@ -3,6 +3,21 @@
   width: calc(50% - 30px);
 }
 
+.channel-img {
+  border-radius: 15px;
+  vertical-align: middle; /*maybe best inside of table so that text can start at the top */
+  width: 60px;
+  height: 60px;
+}
+
+.channel-name {
+  vertical-align: middle;
+}
+
+.channel-header {
+  margin: "0px";
+}
+
 #investing-areas {
   display: flex;
   flex-direction: row;
@@ -23,19 +38,22 @@
   padding: 4px 7px;
 }
 
-.channel-img {
-  border-radius: 15px;
-  vertical-align: middle; /*maybe best inside of table so that text can start at the top */
-  width: 60px;
-  height: 60px;
+#statistics-title {
+  font-size: 18px;
+  margin: 18px 5px;
 }
 
-.channel-name {
-  vertical-align: middle;
+table {
+  width: 100%;
 }
-
-.channel-header {
-  margin: "0px";
+table tr {
+  width: 100%;
+}
+table tr td input[id=stats-score] {
+  text-align: right;
+}
+table tr td input[id=stats-date] {
+  text-align: right;
 }
 
 /*# sourceMappingURL=investing_compiled.css.map */

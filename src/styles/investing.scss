@@ -1,9 +1,25 @@
 @import '@fortawesome/fontawesome-free/css/all.css';
 
 $main-area-margin: 30px;
+$right-align-input-ids: "stats-score", "stats-date";
 
 %main-area {
     width: calc(50% - $main-area-margin);
+}
+
+.channel-img {
+    border-radius: 15px;
+    vertical-align: middle; /*maybe best inside of table so that text can start at the top */
+    width: 60px;
+    height: 60px
+}
+
+.channel-name {
+    vertical-align: middle;
+}
+
+.channel-header {
+    margin: "0px";
 }
 
 #investing-areas {
@@ -29,17 +45,23 @@ $main-area-margin: 30px;
     padding: 4px 7px;
 }
 
-.channel-img {
-    border-radius: 15px;
-    vertical-align: middle; /*maybe best inside of table so that text can start at the top */
-    width: 60px;
-    height: 60px
+#statistics-title {
+    font-size: 18px;
+    margin: 18px 5px;
 }
 
-.channel-name {
-    vertical-align: middle;
-}
+table {
+    width: 100%;
 
-.channel-header {
-    margin: "0px";
+    tr {
+        width: 100%;
+
+        td {
+            @each $id in $right-align-input-ids {
+                input[id=#{$id}] {
+                    text-align: right;
+                }
+            }
+        }
+    }
 }

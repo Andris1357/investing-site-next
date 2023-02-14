@@ -1,4 +1,7 @@
+import { ReactNode } from "react";
 import * as Data from "../data";
+
+type CellContent = JSX.Element | ReactNode;
 
 export interface InputFieldIF {
     label_text: string,
@@ -9,6 +12,19 @@ export interface InputFieldIF {
 
 interface ChannelHeaderArgs {
     channel_index_: number
+}
+
+interface DisabledTextboxArgs {
+    element_id_: string, 
+    value_: number | string, 
+}
+
+interface TableRowArgs {
+    cells_content: CellContent[],
+}
+
+interface TableArgs {
+    rows_content: CellContent[][],
 }
 
 export function InputField(args: InputFieldIF): JSX.Element {
@@ -31,7 +47,52 @@ export function ChannelHeader(args: ChannelHeaderArgs): JSX.Element { // /\: mak
         <div className="channel-header">
             <img src={Data.channels[args.channel_index_].image_source} className="channel-img" />
             <span className="channel-name">    {Data.channels[args.channel_index_].name}    </span>
-            <a href={Data.channels[args.channel_index_].link}><i className="fas fa-external-link-alt"></i></a>
+            <a href={Data.channels[args.channel_index_].link}>
+                <i className="fas fa-external-link-alt"></i>
+            </a>
         </div>
+    )
+}
+
+export const DisabledTextbox = (args: DisabledTextboxArgs): JSX.Element => {
+    return (
+        <input id={args.element_id_} type="text" disabled value={args.value_}></input>
+    )
+}
+
+export const Table = (args: TableArgs) => {
+    if (!Array.isArray(args.rows_content)) {
+        return (
+            <table><tbody>
+                <tr><TableRow cells_content={args.rows_content}></TableRow></tr>
+            </tbody></table>
+        )
+    }
+    return (
+        <table style={{minHeight: "30px"}}><tbody>
+            {args.rows_content.map(row_ => (
+                <tr><TableRow cells_content={row_}></TableRow></tr>
+            ))}
+        </tbody></table>
+    )
+}
+
+export const TableRow = (args: TableRowArgs): JSX.Element => {
+    if (!Array.isArray(args.cells_content)) {
+        return (
+            <td>{args.cells_content}</td>
+        )
+    }
+    if (args.cells_content.slice(1,).every(cell_content_ => cell_content_ === "")) {
+        return (
+            <td colSpan={4} style={Data.metric_category_style}>{args.cells_content[0]}</td>
+        )
+    }
+    return (
+        <>
+            {args.cells_content.map(content_ => (
+                <td><span>{content_}</span></td>
+            ))}
+        </>
     )
 }

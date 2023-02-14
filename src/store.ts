@@ -1,16 +1,17 @@
 import { createStore, Store, Action } from 'redux'; // TD: use redux toolkit
+import { shiftedRandom } from './pages/utility';
 
 export interface GlobalState {
     current_token_amount: number;
     current_channel_index: number;
 }
 
-interface GlobalSetAction extends Action {
+export interface GlobalSetAction extends Action {
     payload: number;
 }
 
 const initial_state: GlobalState = {
-    current_token_amount: 0,
+    current_token_amount: shiftedRandom(60000, 30000, 5),
     current_channel_index: 0,
 };
 
