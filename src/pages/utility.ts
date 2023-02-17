@@ -67,6 +67,19 @@ export function attachHoverMessageEventListeners(message_class_name_: string): v
     }
 }
 
+export function positionHoverMessages(message_class_name_: string): void {
+    const hover_message_timeseries: Array<HTMLElement|Element> = [
+        ...document.getElementsByClassName(message_class_name_)
+    ];
+    for (let element_ of hover_message_timeseries) {
+        let message_width: number = element_.getBoundingClientRect()["width"];
+        let icon_width: number = $(
+            `${message_class_name_}-anchor-${element_.id.substring(element_.id.lastIndexOf('-') + 1)}`
+        ).getBoundingClientRect()["width"];
+        (element_ as HTMLElement).style.left = `${-1 * (message_width / 2 - icon_width / 2)}px`;
+    }
+}
+
 export function getMenuIcons(): HTMLElement[] {
     return [...document.getElementsByTagName("i")].filter(
         (element_: HTMLElement): boolean => {

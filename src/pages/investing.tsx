@@ -4,11 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { MenuRibbon } from "./areas";
-import store, { GlobalState } from "@/store";
-import { ChannelHeader, Table, DisabledTextbox, InfoHoverIcon } from "./elements";
+import { GlobalState } from "@/store";
+import { ChannelHeader, Table, DisabledTextbox, CategoryWithInfo } from "./elements";
 import * as Data from "../data";
 import { Channel } from "../data";
-import { attachHoverMessageEventListeners, $ } from "./utility";
+import { attachHoverMessageEventListeners, positionHoverMessages } from "./utility";
+import { TimeFrameInDays, value_timeframe_map } from "@/typed_data";
 
 export default function InvestingPage({}): JSX.Element {
     const dispatchGlobalState = useDispatch();
@@ -16,6 +17,7 @@ export default function InvestingPage({}): JSX.Element {
     
     const [current_channel_index, selectChannelIndex] = useState<number>(current_channel_selector);
     const [current_channel, selectChannel] = useState<Channel>(Data.channels[current_channel_selector]);
+    const [current_timeframe, selectTimeframe] = useState<TimeFrameInDays>("8760");
 
     useEffect(() => {
         dispatchGlobalState({
@@ -23,22 +25,14 @@ export default function InvestingPage({}): JSX.Element {
             payload: current_channel_index
         });
         selectChannel(Data.channels[current_channel_selector]);
+        console.log(current_channel.score_timeseries)
     }, [current_channel_index])
 
     useEffect(() => {
         attachHoverMessageEventListeners("info-hover");
-        const hover_message_timeseries: Array<HTMLElement|Element> = [
-            ...document.getElementsByClassName("info-hover")
-        ];
-        for (let element_ of hover_message_timeseries) {
-            let message_width: number = element_.getBoundingClientRect()["width"];
-            let icon_width: number = $(
-                `info-hover-anchor-${element_.id.substring(element_.id.lastIndexOf('-') + 1)}`
-            ).getBoundingClientRect()["width"];
-            (element_ as HTMLElement).style.left = `${-1 * (message_width / 2 - icon_width / 2)}px`;
-        }
+        positionHoverMessages("info-hover");
     }, [])
-    
+
     return (
         <div id="investing-parent" className="absolute-parent">
             <div><MenuRibbon current_menu_id_="investing-menu-icon"/></div>
@@ -48,8 +42,6 @@ export default function InvestingPage({}): JSX.Element {
                         <ChannelHeader channel_index_={current_channel_index}/>
                         <p id="statistics-title"><strong>Channel statistics</strong></p>
                         <hr />
-                        {/* NOW: insert Table elements wrapped into functions (they have hardcoded stuff anyways mostly) */}
-                        <div>data<br/>current_channel:{`${current_channel_selector}`}</div>
                         <Table rows_content={[
                             [
                                 React.createElement("label", {htmlFor: "stats-score"}, "Platform score"), 
@@ -64,7 +56,34 @@ export default function InvestingPage({}): JSX.Element {
                             ]
                         ]}/>
                         <hr />
-                        <InfoHoverIcon info_id_={1} info_text_="custom text"/>
+                        <Table rows_content={[
+                            [" ", "Individual value", "Universe average", "Individual index modifier"], 
+                            [
+                                React.createElement("span", {style: Data.metric_category_style}, "Static metrics"), "", "", ""
+                            ],
+                            ...([
+                                current_channel.subscriber_count, 
+                                current_channel.currently_staking
+                            ].map(metric_ => [
+                                metric_.label, metric_.individual_value, metric_.universe_average, metric_.individual_modifier
+                            ])),
+                            [
+                                <CategoryWithInfo 
+                                    label_text_="Dynamic metrics" 
+                                    info_id_={1}
+                                    info_text_={`The period over which changes are measured is ${value_timeframe_map[current_timeframe]}`}
+                                />,
+                                "", "", ""
+                            ],
+                            ...([
+                                current_channel.subscriber_count_change, 
+                                current_channel.views_count_change,
+                                current_channel.uploads_count_change,
+                                current_channel.platform_score_change
+                            ].map(metric_ => [
+                                metric_.label, metric_.individual_value, metric_.universe_average, metric_.individual_modifier
+                            ])),
+                        ]}/>
                     </div>
                     <div id="investing-actions">actions</div>
                 </div>
@@ -83,5 +102,5 @@ export default function InvestingPage({}): JSX.Element {
                 </div>
             </div>
         </div>
-    )
+    ) // NOW: STYLE TABLE --> DYNAMIZE CHANGE% VALUES <= SELECTED TIMEFRAME -> calc avg fr 2 entities -> relativize indiv metrics
 }

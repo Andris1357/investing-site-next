@@ -11,7 +11,7 @@ export interface InputFieldIF {
 }
 
 interface ChannelHeaderArgs {
-    channel_index_: number
+    channel_index_: number,
 }
 
 interface DisabledTextboxArgs {
@@ -21,7 +21,13 @@ interface DisabledTextboxArgs {
 
 interface InfoHoverIconArgs {
     info_id_: number, 
-    info_text_: string
+    info_text_: string,
+}
+
+interface CategoryWithInfoArgs {
+    label_text_: string, 
+    info_id_: number, 
+    info_text_: string,
 }
 
 interface TableRowArgs {
@@ -74,6 +80,16 @@ export const InfoHoverIcon = (args: InfoHoverIconArgs): JSX.Element => {
     )
 }
 
+export const CategoryWithInfo = (args: CategoryWithInfoArgs) => {
+    return (
+        <span>
+            <span style={Data.metric_category_style}>{args.label_text_}</span>
+            <span style={Data.space_style}></span>
+            <InfoHoverIcon info_id_={args.info_id_} info_text_={args.info_text_}/>
+        </span>
+    )
+}
+
 export const Table = (args: TableArgs) => {
     if (!Array.isArray(args.rows_content)) {
         return (
@@ -99,7 +115,9 @@ export const TableRow = (args: TableRowArgs): JSX.Element => {
     }
     if (args.cells_content.slice(1,).every(cell_content_ => cell_content_ === "")) {
         return (
-            <td colSpan={4} style={Data.metric_category_style}>{args.cells_content[0]}</td>
+            <td colSpan={4} style={Data.metric_category_style}>
+                {args.cells_content[0]}
+            </td>
         )
     }
     return (

@@ -3,6 +3,33 @@
   width: calc(50% - 30px);
 }
 
+table {
+  width: 100%;
+  font-size: 13px;
+  margin: 11px 0;
+}
+table th, table td {
+  padding: 5px;
+}
+table tr {
+  width: 100%;
+}
+table tr:first-child {
+  font-weight: bold;
+}
+table tr td:first-child {
+  text-align: left;
+}
+table tr td input[id=stats-score] {
+  text-align: right;
+}
+table tr td input[id=stats-date] {
+  text-align: right;
+}
+table tr td + td {
+  text-align: center;
+}
+
 .channel-img {
   border-radius: 15px;
   vertical-align: middle; /*maybe best inside of table so that text can start at the top */
@@ -26,7 +53,6 @@
 .info-hover-anchor .info-hover {
   position: absolute;
   bottom: 125%;
-  left: 0;
   visibility: hidden;
   display: inline;
   background-color: #555;
@@ -71,20 +97,6 @@
 #statistics-title {
   font-size: 18px;
   margin: 18px 5px;
-}
-
-table {
-  width: 100%;
-  font-size: 13px;
-}
-table tr {
-  width: 100%;
-}
-table tr td input[id=stats-score] {
-  text-align: right;
-}
-table tr td input[id=stats-date] {
-  text-align: right;
 }
 
 /*# sourceMappingURL=investing_compiled.css.map */

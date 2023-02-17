@@ -2,15 +2,39 @@
 
 $main-area-margin: 30px;
 $right-align-input-ids: "stats-score", "stats-date";
-$info_hover_count: 1;
-$show_info_list: ();
-
-@for $info_hover_index_ from 1 through $info_hover_count {
-    // NOW: append elements to list; change element btw 1|0 <= is it on hover -> make visibility dependent on this (\/ternary?)
-}
 
 %main-area {
     width: calc(50% - $main-area-margin);
+}
+
+table {
+    width: 100%;
+    font-size: 13px;
+    margin: 11px 0;
+
+    th, td {
+        padding: 5px;
+    }
+    tr {
+        width: 100%;
+        
+        &:first-child {
+            font-weight: bold;
+        }
+        td:first-child {
+            text-align: left;
+        }
+        td {
+            @each $id in $right-align-input-ids {
+                input[id=#{$id}] {
+                    text-align: right;
+                }
+            }
+        }
+        td + td {
+            text-align: center;
+        }
+    }
 }
 
 .channel-img {
@@ -36,7 +60,6 @@ $show_info_list: ();
     .info-hover {
         position: absolute;
         bottom: 125%;
-        left: 0;
         visibility: hidden;
         display: inline;
         background-color: #555;
@@ -86,22 +109,4 @@ $show_info_list: ();
 #statistics-title {
     font-size: 18px;
     margin: 18px 5px;
-}
-
-table {
-    width: 100%;
-    font-size: 13px;
-
-    tr {
-        width: 100%;
-        // TD: selector for some ids that are of a bigger fontsize & bold
-
-        td {
-            @each $id in $right-align-input-ids {
-                input[id=#{$id}] {
-                    text-align: right;
-                }
-            }
-        }
-    }
 }

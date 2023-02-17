@@ -54,7 +54,7 @@ export class Channel {
 }
 // /\: GENERATE MORE DATA FOR {INVESTMENTS ON CRT CHANNELS, TOTAL INVESTMENT VALUES} #> should not the total value be shown for all channels?
 export const index_update_frequency = 2; // I: every x hours (<1 if more over 1 hour), in future get this value dynamically, based on the current freq
-const timeseries_max_length = 9760;
+const timeseries_max_length = 17520;
 export const last_updated = "2021.09.30"; // LT: query fr DB
 export const current_timeframe = "1 year"; // TD: ßuseState => have this change b.o. what btn was clicked last
 
