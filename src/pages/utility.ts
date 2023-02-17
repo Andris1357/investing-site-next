@@ -9,6 +9,10 @@ export class SetColorEventListenerArgs {
     ) {}
 }
 
+export function $(id_: string): HTMLElement | any {
+    return document.getElementById(id_);
+}
+
 export function shiftedRandom(
     range_: number, 
     offset_: number, 
@@ -28,12 +32,39 @@ export function changeAmountCallback(
 }
 
 export function setColorEventListener(args: SetColorEventListenerArgs): void {
-    let element: HTMLElement | any = document.getElementById(args.button_id_);
+    let element: HTMLElement | any = $(args.button_id_);
     let callable = (): void => {
         element.style.borderColor = args.edges_;
         element.style.color = args.font_;
     }
     element.addEventListener(args.event_, callable);
+}
+
+export function attachHoverMessageEventListeners(message_class_name_: string): void {
+    let hover_anchors: Element[] = [
+        ...document.getElementsByClassName(`${message_class_name_}-anchor`)
+    ];
+
+    for (let anchor_i_: number = 1; anchor_i_ <= hover_anchors.length; anchor_i_++) {
+        $(`${message_class_name_}-anchor-${anchor_i_}`).addEventListener(
+            "mouseenter", 
+            (): void => {
+                let message_element: HTMLElement | null = $(`${message_class_name_}-${anchor_i_}`);
+                if (message_element !== null) {
+                    (message_element as HTMLElement).style.visibility = "visible";
+                }
+            }
+        );
+        $(`${message_class_name_}-anchor-${anchor_i_}`).addEventListener(
+            "mouseleave", 
+            (): void => {
+                let message_element: HTMLElement | null = $(`${message_class_name_}-${anchor_i_}`);
+                if (message_element !== null) {
+                    (message_element as HTMLElement).style.visibility = "hidden";
+                }
+            }
+        );
+    }
 }
 
 export function getMenuIcons(): HTMLElement[] {

@@ -23,7 +23,7 @@ class Metric {
     }
 }
 
-class Channel {
+export class Channel {
     constructor (
         name_,
         score_, 

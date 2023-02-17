@@ -19,6 +19,11 @@ interface DisabledTextboxArgs {
     value_: number | string, 
 }
 
+interface InfoHoverIconArgs {
+    info_id_: number, 
+    info_text_: string
+}
+
 interface TableRowArgs {
     cells_content: CellContent[],
 }
@@ -57,6 +62,15 @@ export function ChannelHeader(args: ChannelHeaderArgs): JSX.Element { // /\: mak
 export const DisabledTextbox = (args: DisabledTextboxArgs): JSX.Element => {
     return (
         <input id={args.element_id_} type="text" disabled value={args.value_}></input>
+    )
+}
+
+export const InfoHoverIcon = (args: InfoHoverIconArgs): JSX.Element => {
+    return (
+        <span className="info-hover-anchor" id={`info-hover-anchor-${args.info_id_}`}>
+            <i className="fas fa-info-circle"></i>
+            <div className="info-hover" id={`info-hover-${args.info_id_}`}>{args.info_text_}</div>
+        </span>
     )
 }
 

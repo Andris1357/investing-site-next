@@ -57,6 +57,7 @@ hr {
 
 .absolute-parent {
   height: 100vh;
+  font-family: "Roboto Mono", monospace;
 }
 
 .main-area {

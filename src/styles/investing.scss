@@ -2,6 +2,12 @@
 
 $main-area-margin: 30px;
 $right-align-input-ids: "stats-score", "stats-date";
+$info_hover_count: 1;
+$show_info_list: ();
+
+@for $info_hover_index_ from 1 through $info_hover_count {
+    // NOW: append elements to list; change element btw 1|0 <= is it on hover -> make visibility dependent on this (\/ternary?)
+}
 
 %main-area {
     width: calc(50% - $main-area-margin);
@@ -20,6 +26,38 @@ $right-align-input-ids: "stats-score", "stats-date";
 
 .channel-header {
     margin: "0px";
+}
+
+.info-hover-anchor { // I: relativizing position does not work with outer element defined by id (#)
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+
+    .info-hover {
+        position: absolute;
+        bottom: 125%;
+        left: 0;
+        visibility: hidden;
+        display: inline;
+        background-color: #555;
+        color: #fff;
+        z-index: 1;
+        border-radius: 6px;
+        padding: 4px 5px;
+        font-size: small;
+        white-space: nowrap;
+        color: chartreuse;
+
+        &::after {
+            content: "";
+            position: absolute;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+            border-width: 5px;
+            top: 100%;
+            left: calc(50% - 5px)
+        }
+    }
 }
 
 #investing-areas {
@@ -52,9 +90,11 @@ $right-align-input-ids: "stats-score", "stats-date";
 
 table {
     width: 100%;
+    font-size: 13px;
 
     tr {
         width: 100%;
+        // TD: selector for some ids that are of a bigger fontsize & bold
 
         td {
             @each $id in $right-align-input-ids {

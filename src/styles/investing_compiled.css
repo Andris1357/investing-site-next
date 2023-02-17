@@ -18,6 +18,36 @@
   margin: "0px";
 }
 
+.info-hover-anchor {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+.info-hover-anchor .info-hover {
+  position: absolute;
+  bottom: 125%;
+  left: 0;
+  visibility: hidden;
+  display: inline;
+  background-color: #555;
+  color: #fff;
+  z-index: 1;
+  border-radius: 6px;
+  padding: 4px 5px;
+  font-size: small;
+  white-space: nowrap;
+  color: chartreuse;
+}
+.info-hover-anchor .info-hover::after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+  border-width: 5px;
+  top: 100%;
+  left: calc(50% - 5px);
+}
+
 #investing-areas {
   display: flex;
   flex-direction: row;
@@ -45,6 +75,7 @@
 
 table {
   width: 100%;
+  font-size: 13px;
 }
 table tr {
   width: 100%;
