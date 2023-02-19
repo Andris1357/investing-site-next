@@ -7,7 +7,7 @@ import { MenuRibbon } from "./areas";
 import { GlobalState } from "@/store";
 import { ChannelHeader, Table, DisabledTextbox, CategoryWithInfo } from "./elements";
 import * as Data from "../data";
-import { Channel } from "../data";
+import { Channel, Metric } from "../data";
 import { attachHoverMessageEventListeners, positionHoverMessages } from "./utility";
 import { TimeFrameInDays, value_timeframe_map } from "@/typed_data";
 
@@ -25,12 +25,12 @@ export default function InvestingPage({}): JSX.Element {
             payload: current_channel_index
         });
         selectChannel(Data.channels[current_channel_selector]);
-        console.log(current_channel.score_timeseries)
     }, [current_channel_index])
 
     useEffect(() => {
         attachHoverMessageEventListeners("info-hover");
         positionHoverMessages("info-hover");
+        console.log(Data.channels.map((element_: Channel) => element_.subscriber_count.individual_value))
     }, [])
 
     return (
@@ -64,8 +64,11 @@ export default function InvestingPage({}): JSX.Element {
                             ...([
                                 current_channel.subscriber_count, 
                                 current_channel.currently_staking
-                            ].map(metric_ => [
-                                metric_.label, metric_.individual_value, metric_.universe_average, metric_.individual_modifier
+                            ].map((metric_: Metric): Array<number|string> => [
+                                metric_.label, 
+                                metric_.individual_value, 
+                                metric_.universe_average, 
+                                metric_.individual_modifier
                             ])),
                             [
                                 <CategoryWithInfo 
@@ -80,8 +83,11 @@ export default function InvestingPage({}): JSX.Element {
                                 current_channel.views_count_change,
                                 current_channel.uploads_count_change,
                                 current_channel.platform_score_change
-                            ].map(metric_ => [
-                                metric_.label, metric_.individual_value, metric_.universe_average, metric_.individual_modifier
+                            ].map((metric_: Metric): Array<number|string> => [
+                                metric_.label, 
+                                metric_.individual_value, 
+                                metric_.universe_average, 
+                                metric_.individual_modifier
                             ])),
                         ]}/>
                     </div>
@@ -102,5 +108,5 @@ export default function InvestingPage({}): JSX.Element {
                 </div>
             </div>
         </div>
-    ) // NOW: STYLE TABLE --> DYNAMIZE CHANGE% VALUES <= SELECTED TIMEFRAME -> calc avg fr 2 entities -> relativize indiv metrics
+    )
 }

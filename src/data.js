@@ -1,3 +1,5 @@
+import { subscriber_counts, subscriber_count_average } from "./typed_data";
+
 class InvestmentAttribute {
     constructor (label_, value_) {
         this.label = label_;
@@ -14,7 +16,7 @@ class Investment {
     }
 }
 
-class Metric {
+export class Metric {
     constructor (label_, individual_value_, universe_average_, individual_modifier_) {
         this.label = label_;
         this.individual_value = individual_value_;
@@ -23,7 +25,7 @@ class Metric {
     }
 }
 
-export class Channel {
+export class Channel { // TD: refactor with types
     constructor (
         name_,
         score_, 
@@ -83,9 +85,9 @@ export const investments = [ // LT: sh come from DB
 
 export const channels = [
     new Channel(
-        "Channel 1",
-        1.4804627,
-        new Metric("Subscriber count", 125318, 279214, "+2.85%"),
+        "Channel 1", // TD: refactor this with ßArray.from() where channel name & $sub_cnt take index_ as arg
+        1.4804627, // TD: fix subscriber count being rendered as ~[0] on both channels before switching
+        new Metric("Subscriber count", subscriber_counts[0], subscriber_count_average, "+2.85%"),
         new Metric("Currently staking", 9738, 620, "-10.58%"),
         new Metric("Change in subscriber count", "+0.81%", "+0.28%", "+1.5%"),
         new Metric("Change in count of total views", "+0.91%", "+0.38%", "+4.27%"),
@@ -95,7 +97,7 @@ export const channels = [
         [
             new Investment(
                 "0x4b68d3f5e32e051cd9b9d3b3a3c6e7e6f1a1b2c2d3e3f4b5c5d6e7f8",
-                new InvestmentAttribute("Time until lock expires", "6d 7h 19m"),
+                new InvestmentAttribute("Time until lock expires", "6d 7h 19m"), // TD: refactor these to accept 1 char that gets converted to a label with ßswitch & throws err on deft
                 new InvestmentAttribute("Invested tokens", 335927),
                 new InvestmentAttribute("Current value", 482934)
             ),
@@ -112,7 +114,7 @@ export const channels = [
     new Channel(
         "Channel 2",
         1.8936851,
-        new Metric("Subscriber count", 66389, 279214, "+2.85%"),
+        new Metric("Subscriber count", subscriber_counts[1], subscriber_count_average, "+2.85%"),
         new Metric("Currently staking", 148, 620, "+0.59%"),
         new Metric("Change in subscriber count", "+20.53%%", "+0.28%", "+46.4%"),
         new Metric("Change in count of total views", "+0.91%", "+0.38%", "+4.27%"),

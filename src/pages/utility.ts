@@ -13,6 +13,15 @@ export function $(id_: string): HTMLElement | any {
     return document.getElementById(id_);
 }
 
+export function arrayAverage(array_: number[]): number {
+    const sum_of_array: number = array_.reduce((
+        accumulator_: number, 
+        current_: number
+    ): number => accumulator_ + current_);
+    
+    return sum_of_array / array_.length
+}
+
 export function shiftedRandom(
     range_: number, 
     offset_: number, 
@@ -71,6 +80,7 @@ export function positionHoverMessages(message_class_name_: string): void {
     const hover_message_timeseries: Array<HTMLElement|Element> = [
         ...document.getElementsByClassName(message_class_name_)
     ];
+    
     for (let element_ of hover_message_timeseries) {
         let message_width: number = element_.getBoundingClientRect()["width"];
         let icon_width: number = $(
