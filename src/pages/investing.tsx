@@ -1,4 +1,4 @@
-// NOW: create user settings & login|register page
+// TD: create user settings & login|register page
 // NOW: refactor code from components.jsx into investing.tsx
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import { ChannelHeader, Table, DisabledTextbox, CategoryWithInfo } from "./eleme
 import * as Data from "../data";
 import { Channel, Metric } from "../data";
 import { attachHoverMessageEventListeners, positionHoverMessages } from "./utility";
-import { TimeFrameInDays, value_timeframe_map } from "@/typed_data";
+import { TimeFrameInDays, value_timeframe_map, subscriber_counts_current_average } from "@/typed_data";
 
 export default function InvestingPage({}): JSX.Element {
     const dispatchGlobalState = useDispatch();
@@ -27,10 +27,11 @@ export default function InvestingPage({}): JSX.Element {
         selectChannel(Data.channels[current_channel_selector]);
     }, [current_channel_index])
 
+    useEffect(() => {}, [current_channel]);
+
     useEffect(() => {
         attachHoverMessageEventListeners("info-hover");
         positionHoverMessages("info-hover");
-        console.log(Data.channels.map((element_: Channel) => element_.subscriber_count.individual_value))
     }, [])
 
     return (
@@ -94,17 +95,25 @@ export default function InvestingPage({}): JSX.Element {
                     <div id="investing-actions">actions</div>
                 </div>
                 <div id="chart-area">
-                    chart
                     <button id="arrow-button" className="glowing-button" onClick={
-                        () => selectChannelIndex((current_index_: number): number => current_index_ - 1)
+                        () => selectChannelIndex(
+                            (current_index_: number): number => current_index_ === 0
+                                ? current_index_
+                                : current_index_ - 1
+                        )
                     }>
                         <i className="fas fa-solid fa-arrow-left"></i>
                     </button>
                     <button id="arrow-button" className="glowing-button" onClick={
-                        () => selectChannelIndex((current_index_: number): number => current_index_ + 1)
+                        () => selectChannelIndex(
+                            (current_index_: number): number => current_index_ == Data.channels.length - 1
+                                ? current_index_ 
+                                : current_index_ + 1
+                        )
                     }>
                         <i className="fas fa-solid fa-arrow-right"></i>
                     </button>
+                    <div>{subscriber_counts_current_average}</div>
                 </div>
             </div>
         </div>

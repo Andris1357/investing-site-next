@@ -13,13 +13,15 @@ export function $(id_: string): HTMLElement | any {
     return document.getElementById(id_);
 }
 
-export function arrayAverage(array_: number[]): number {
-    const sum_of_array: number = array_.reduce((
+export function sum(array_: number[]): number {
+    return array_.reduce((
         accumulator_: number, 
         current_: number
-    ): number => accumulator_ + current_);
-    
-    return sum_of_array / array_.length
+    ): number => accumulator_ + current_)
+}
+
+export function mean(array_: number[]): number {
+    return sum(array_) / array_.length
 }
 
 export function shiftedRandom(
@@ -28,6 +30,21 @@ export function shiftedRandom(
     digits_: number
 ): number {
     return Number((Math.random() * range_ + offset_).toFixed(digits_))
+}
+
+export function generateRandomTimeseries(
+    length_: number, 
+    initial_value_: number, 
+    mean_: number,
+    deviation_: number,
+): number[] {
+    let timeseries: number[] = [initial_value_]; // LT: only load deft timeseries, make req to db if user wants to view longer timefr
+    for (let i = 1; i < length_; i++) {
+        timeseries.push(
+            timeseries[i - 1] + Math.random() * deviation_ - deviation_ / 2 + mean_
+        );
+    }
+    return timeseries;
 }
 
 export function changeAmountCallback(
@@ -80,7 +97,7 @@ export function positionHoverMessages(message_class_name_: string): void {
     const hover_message_timeseries: Array<HTMLElement|Element> = [
         ...document.getElementsByClassName(message_class_name_)
     ];
-    
+
     for (let element_ of hover_message_timeseries) {
         let message_width: number = element_.getBoundingClientRect()["width"];
         let icon_width: number = $(
@@ -96,4 +113,8 @@ export function getMenuIcons(): HTMLElement[] {
             return element_.id.includes("menu-icon")
         }
     )
+}
+
+export function formatPercentageValue(base_: number): string {
+    return `${base_ > 0 ? "+" : ""}${(base_ * 100).toFixed(2)}%`
 }

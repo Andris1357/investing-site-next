@@ -1,4 +1,10 @@
-import { subscriber_counts, subscriber_count_average } from "./typed_data";
+import { 
+    subscriber_counts_current, 
+    subscriber_counts_current_average, 
+    timeseries_max_length, 
+    subscriber_count_current_increments,
+} from "./typed_data";
+import { generateRandomTimeseries, formatPercentageValue } from "./pages/utility";
 
 class InvestmentAttribute {
     constructor (label_, value_) {
@@ -56,17 +62,8 @@ export class Channel { // TD: refactor with types
 }
 // /\: GENERATE MORE DATA FOR {INVESTMENTS ON CRT CHANNELS, TOTAL INVESTMENT VALUES} #> should not the total value be shown for all channels?
 export const index_update_frequency = 2; // I: every x hours (<1 if more over 1 hour), in future get this value dynamically, based on the current freq
-const timeseries_max_length = 17520;
 export const last_updated = "2021.09.30"; // LT: query fr DB
 export const current_timeframe = "1 year"; // TD: ßuseState => have this change b.o. what btn was clicked last
-
-function generateRandomTimeseries() {
-    let timeseries = [Math.random() * 5]; // LT: only load deft timeseries, make req to db if user wants to view longer timefr
-    for (let i = 1; i < timeseries_max_length; i++) {
-        timeseries.push(timeseries[i - 1] + Math.random() * 10 - 5);
-    }
-    return timeseries;
-}
 
 export const investments = [ // LT: sh come from DB
     new Investment(
@@ -87,13 +84,23 @@ export const channels = [
     new Channel(
         "Channel 1", // TD: refactor this with ßArray.from() where channel name & $sub_cnt take index_ as arg
         1.4804627, // TD: fix subscriber count being rendered as ~[0] on both channels before switching
-        new Metric("Subscriber count", subscriber_counts[0], subscriber_count_average, "+2.85%"),
+        new Metric(
+            "Subscriber count", 
+            subscriber_counts_current[0].toFixed(0), 
+            subscriber_counts_current_average.toFixed(0), 
+            "-13.47%"
+        ),
         new Metric("Currently staking", 9738, 620, "-10.58%"),
         new Metric("Change in subscriber count", "+0.81%", "+0.28%", "+1.5%"),
-        new Metric("Change in count of total views", "+0.91%", "+0.38%", "+4.27%"),
+        new Metric(
+            "Change in count of total views", 
+            formatPercentageValue(subscriber_count_current_increments[0]), 
+            "+0.38%", 
+            "+4.27%"
+        ),
         new Metric("Change in count of uploads", 8, 3.71, "+11.38%"),
         new Metric("Change of platform score", "+8.46%", "-0.67%", "-2.38%"),
-        generateRandomTimeseries(),
+        generateRandomTimeseries(timeseries_max_length, Math.random() * 5, 0, 10),
         [
             new Investment(
                 "0x4b68d3f5e32e051cd9b9d3b3a3c6e7e6f1a1b2c2d3e3f4b5c5d6e7f8",
@@ -114,13 +121,23 @@ export const channels = [
     new Channel(
         "Channel 2",
         1.8936851,
-        new Metric("Subscriber count", subscriber_counts[1], subscriber_count_average, "+2.85%"),
+        new Metric(
+            "Subscriber count", 
+            subscriber_counts_current[1].toFixed(0), 
+            subscriber_counts_current_average.toFixed(0), 
+            "+2.85%"
+        ),
         new Metric("Currently staking", 148, 620, "+0.59%"),
-        new Metric("Change in subscriber count", "+20.53%%", "+0.28%", "+46.4%"),
+        new Metric(
+            "Change in subscriber count", 
+            formatPercentageValue(subscriber_count_current_increments[1]), 
+            "+0.28%", 
+            "+46.4%"
+        ),
         new Metric("Change in count of total views", "+0.91%", "+0.38%", "+4.27%"),
         new Metric("Change in count of uploads", 17, 3.71, "+14.95%"),
         new Metric("Change of platform score", "+22.7%", "-0.67%", "-13.64%"),
-        generateRandomTimeseries(),
+        generateRandomTimeseries(timeseries_max_length, Math.random() * 5, 0, 10),
         [
             new Investment(
                 "0x2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9",
