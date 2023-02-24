@@ -41,7 +41,7 @@ const set_color_event_listener_args: SetColorEventListenerArgs[] = [
     new SetColorEventListenerArgs("", Data.red_borders, "red", "mouseenter"),
 ]
 
-export default function TradingPage(): JSX.Element {
+export default function TradingPage(): JSX.Element { // TD: include an area where they can load native tokens into their account, maybe in the same as the withdraw tokens
     const dispatchGlobalState: Dispatch<GlobalSetAction> = useDispatch();
     const token_amount_selector: number = useSelector((state: GlobalState): number => state.current_token_amount);
     

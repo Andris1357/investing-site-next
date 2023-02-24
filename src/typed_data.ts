@@ -28,7 +28,7 @@ class IncrementChanges {
         this.all = 1 - current_value_ / all_value_;
     }
 
-    static calculateIncrementChanges(timeseries_: number[][]): IncrementChanges[] {
+    static calculateIncrementChangesForAllChannels(timeseries_: number[][]): IncrementChanges[] {
         return Array.from(
             {length: number_of_channels},
             (_, index_: number): IncrementChanges => new IncrementChanges(
@@ -39,6 +39,17 @@ class IncrementChanges {
                 timeseries_[index_][timeseries_max_length - 1 - 8760],
                 timeseries_[index_][0],
             )
+        )
+    }
+
+    static calculateIncrementChanges(timeseries_: number[]): IncrementChanges {
+        return new IncrementChanges(
+            timeseries_[timeseries_max_length - 1],
+            timeseries_[timeseries_max_length - 1 - 24],
+            timeseries_[timeseries_max_length - 1 - 168],
+            timeseries_[timeseries_max_length - 1 - 720],
+            timeseries_[timeseries_max_length - 1 - 8760],
+            timeseries_[0],
         )
     }
 }
@@ -67,6 +78,32 @@ function getAllChannelTimestepValues<T>(
     )
 }
 
+function timeseriesWithInitialValue(
+    initial_values_: number[],
+    mean_: number,
+    deviation_: number
+): number[][] {
+    return Array.from(
+        {length: number_of_channels},
+        (_: undefined, index_: number): number[] => generateRandomTimeseries(
+            timeseries_max_length, 
+            initial_values_[index_], 
+            mean_, 
+            deviation_
+        )
+    );
+}
+
+function calculateAveragesOfTimeseries(timeseries_: number[][]): number[] {
+    return Array.from(
+        {length: timeseries_max_length},
+        (_, timestep_index_: number): number => mean(getAllChannelTimestepValues(
+            timeseries_,
+            timestep_index_
+        ))
+    )
+}
+
 export const value_timeframe_map: ValueTimeFrameMap = {
     "17520": "2 years",
     "8760": "1 year",
@@ -75,42 +112,46 @@ export const value_timeframe_map: ValueTimeFrameMap = {
     "24": "1 day",
 };
 
-export const subscriber_counts_initial: number[] = randomArray(150000, 5000, 0);
-export const subscriber_counts_timeseries: number[][] = Array.from(
-    {length: number_of_channels},
-    (_, index_: number): number[] => generateRandomTimeseries(
-        timeseries_max_length, 
-        subscriber_counts_initial[index_], 
-        100, 
-        300
-    )
+const subscriber_counts_initial: number[] = randomArray(150000, 5000, 0);
+export const subscriber_counts_timeseries: number[][] = timeseriesWithInitialValue(
+    subscriber_counts_initial,
+    200,
+    300
 );
 export const subscriber_counts_current: number[] = getAllChannelTimestepValues(
     subscriber_counts_timeseries,
     subscriber_counts_timeseries.length - 1
-)
-// console.log(`current:\n${subscriber_counts_current}`)
-
-export const subscriber_count_average_timeseries: number[] = Array.from(
-    {length: timeseries_max_length},
-    (_, timestep_index_: number): number => mean(getAllChannelTimestepValues(
-        subscriber_counts_timeseries,
-        timestep_index_
-    ))
 );
 
-export const subscriber_counts_current_average: number = subscriber_count_average_timeseries[
-    subscriber_count_average_timeseries.length - 1
-];
-
-export const subscriber_count_increment_changes: IncrementChanges[] = IncrementChanges.calculateIncrementChanges(
+const subscriber_counts_average_timeseries: number[] = calculateAveragesOfTimeseries(subscriber_counts_timeseries);
+export const subscriber_counts_current_average: number = mean(subscriber_counts_current)
+export const subscriber_counts_increment_changes: IncrementChanges[] = IncrementChanges.calculateIncrementChangesForAllChannels(
     subscriber_counts_timeseries
-) // NOW: this should be part of the constructor and I only pass a timeseries | \/ separate function
-export const subscriber_count_current_increments: number[] = subscriber_count_increment_changes.map(
+);
+export const subscriber_counts_average_increment_changes: IncrementChanges = IncrementChanges.calculateIncrementChanges(
+    subscriber_counts_average_timeseries
+);
+export const subscriber_counts_current_increments: number[] = subscriber_counts_increment_changes.map(
     (element_: IncrementChanges) => element_.year
-)
-// NOW: premature mechanism for calculating modifiers
-export const currently_staking_counts: number[] = randomArray(15000, 0, 0);
-export const currently_staking_count_average: number = mean(currently_staking_counts);
+);
 
-// export const staking_count_increment_changes: IncrementChanges[] = ;
+// NOW: premature mechanism for calculating modifiers
+export const currently_staking_counts: number[] = randomArray(50000, 0, 0);
+export const currently_staking_count_average: number = mean(currently_staking_counts);
+// TD: add new attributes for static view cnt
+const view_counts_initial: number[] = randomArray(300000, 10000, 0);
+export const view_counts_timeseries: number[][] = timeseriesWithInitialValue(
+    view_counts_initial,
+    500,
+    500
+); // NOW: calculate universe average
+const view_counts_average_timeseries: number[] = calculateAveragesOfTimeseries(view_counts_timeseries);
+export const view_counts_increment_changes: IncrementChanges[] = IncrementChanges.calculateIncrementChangesForAllChannels(
+    view_counts_timeseries
+);
+export const view_counts_average_increment_changes: IncrementChanges = IncrementChanges.calculateIncrementChanges(
+    view_counts_average_timeseries
+);
+export const view_counts_current_increments: number[] = view_counts_increment_changes.map(
+    (element_: IncrementChanges) => element_.year
+);

@@ -2,7 +2,13 @@ import {
     subscriber_counts_current, 
     subscriber_counts_current_average, 
     timeseries_max_length, 
-    subscriber_count_current_increments,
+    subscriber_counts_current_increments,
+    currently_staking_counts,
+    currently_staking_count_average,
+    subscriber_counts_average_increment_changes,
+    view_counts_current_increments,
+    view_counts_average_increment_changes,
+    
 } from "./typed_data";
 import { generateRandomTimeseries, formatPercentageValue } from "./pages/utility";
 
@@ -90,12 +96,22 @@ export const channels = [
             subscriber_counts_current_average.toFixed(0), 
             "-13.47%"
         ),
-        new Metric("Currently staking", 9738, 620, "-10.58%"),
-        new Metric("Change in subscriber count", "+0.81%", "+0.28%", "+1.5%"),
+        new Metric(
+            "Currently staking", 
+            currently_staking_counts[0], 
+            currently_staking_count_average, 
+            "-10.58%"
+        ),
+        new Metric(
+            "Change in subscriber count", 
+            formatPercentageValue(subscriber_counts_current_increments[0]), 
+            formatPercentageValue(subscriber_counts_average_increment_changes.year),
+            "+1.5%"
+        ),
         new Metric(
             "Change in count of total views", 
-            formatPercentageValue(subscriber_count_current_increments[0]), 
-            "+0.38%", 
+            formatPercentageValue(view_counts_current_increments[0]),
+            formatPercentageValue(view_counts_average_increment_changes.year),
             "+4.27%"
         ),
         new Metric("Change in count of uploads", 8, 3.71, "+11.38%"),
@@ -117,7 +133,7 @@ export const channels = [
         ],
         "https://tse1.mm.bing.net/th?id=OIP.7c-hqo11ia_yd5fcGU7hGgHaF7&pid=Api&rs=1&c=1&qlt=95&w=130&h=104",
         "#",
-    ),
+    ), // TD: merge these into an ßArray.from() once every attribute has been dynamized
     new Channel(
         "Channel 2",
         1.8936851,
@@ -127,14 +143,24 @@ export const channels = [
             subscriber_counts_current_average.toFixed(0), 
             "+2.85%"
         ),
-        new Metric("Currently staking", 148, 620, "+0.59%"),
+        new Metric(
+            "Currently staking", 
+            currently_staking_counts[1], 
+            currently_staking_count_average, 
+            "+0.59%"
+        ),
         new Metric(
             "Change in subscriber count", 
-            formatPercentageValue(subscriber_count_current_increments[1]), 
-            "+0.28%", 
+            formatPercentageValue(subscriber_counts_current_increments[1]), 
+            formatPercentageValue(subscriber_counts_average_increment_changes.year), 
             "+46.4%"
         ),
-        new Metric("Change in count of total views", "+0.91%", "+0.38%", "+4.27%"),
+        new Metric(
+            "Change in count of total views", 
+            formatPercentageValue(view_counts_current_increments[1]), 
+            formatPercentageValue(view_counts_average_increment_changes.year),
+            "+4.27%"
+        ),
         new Metric("Change in count of uploads", 17, 3.71, "+14.95%"),
         new Metric("Change of platform score", "+22.7%", "-0.67%", "-13.64%"),
         generateRandomTimeseries(timeseries_max_length, Math.random() * 5, 0, 10),
