@@ -1,4 +1,4 @@
-import { MetricData } from "./typed_data";
+import { MetricData } from "./Metric";
 
 export const index_update_frequency = 1; // I: every x hours (<1 if more over 1 hour), in future get this value dynamically, based on the current freq
 export const last_updated = "2021.09.30"; // LT: query fr DB

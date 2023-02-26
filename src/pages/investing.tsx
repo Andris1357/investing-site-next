@@ -8,7 +8,8 @@ import { GlobalState } from "@/store";
 import { ChannelHeader, Table, DisabledTextbox, CategoryWithInfo } from "./elements";
 import * as Data from "../data";
 import { attachHoverMessageEventListeners, positionHoverMessages } from "./utility";
-import { TimeFrameInDays, value_timeframe_map, channels, Channel, Metric } from "@/typed_data";
+import { TimeFrameInDays, value_timeframe_map, channels, Channel } from "@/typed_data";
+import Metric from "@/Metric";
 
 export default function InvestingPage({}): JSX.Element {
     const dispatchGlobalState = useDispatch();

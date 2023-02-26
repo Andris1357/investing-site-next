@@ -37,11 +37,16 @@ export function generateRandomTimeseries(
     initial_value_: number, 
     mean_: number,
     deviation_: number,
+    only_int_increments_: boolean = false,
 ): number[] {
     let timeseries: number[] = [initial_value_]; // LT: only load deft timeseries, make req to db if user wants to view longer timefr
     for (let i = 1; i < length_; i++) {
         timeseries.push(
-            timeseries[i - 1] + Math.random() * deviation_ - deviation_ / 2 + mean_
+            timeseries[i - 1] + (
+                only_int_increments_ === true
+                ? Math.floor(Math.random() * deviation_ - deviation_ / 2 + mean_)
+                : Math.random() * deviation_ - deviation_ / 2 + mean_
+            )
         );
     }
     return timeseries;
