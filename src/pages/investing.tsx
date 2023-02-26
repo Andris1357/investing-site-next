@@ -7,16 +7,15 @@ import { MenuRibbon } from "./areas";
 import { GlobalState } from "@/store";
 import { ChannelHeader, Table, DisabledTextbox, CategoryWithInfo } from "./elements";
 import * as Data from "../data";
-import { Channel, Metric } from "../data";
 import { attachHoverMessageEventListeners, positionHoverMessages } from "./utility";
-import { TimeFrameInDays, value_timeframe_map, subscriber_counts_current_average } from "@/typed_data";
+import { TimeFrameInDays, value_timeframe_map, channels, Channel, Metric } from "@/typed_data";
 
 export default function InvestingPage({}): JSX.Element {
     const dispatchGlobalState = useDispatch();
     const current_channel_selector = useSelector((state: GlobalState): number => state.current_channel_index);
     
     const [current_channel_index, selectChannelIndex] = useState<number>(current_channel_selector);
-    const [current_channel, selectChannel] = useState<Channel>(Data.channels[current_channel_selector]);
+    const [current_channel, selectChannel] = useState<Channel>(channels[current_channel_selector]);
     const [current_timeframe, selectTimeframe] = useState<TimeFrameInDays>("8760");
 
     useEffect(() => {
@@ -24,7 +23,7 @@ export default function InvestingPage({}): JSX.Element {
             type: "SET_CHANNEL",
             payload: current_channel_index
         });
-        selectChannel(Data.channels[current_channel_selector]);
+        selectChannel(channels[current_channel_selector]);
     }, [current_channel_index])
 
     useEffect(() => {}, [current_channel]);
@@ -64,7 +63,9 @@ export default function InvestingPage({}): JSX.Element {
                             ],
                             ...([
                                 current_channel.subscriber_count, 
-                                current_channel.currently_staking
+                                current_channel.currently_staking,
+                                current_channel.view_count,
+                                current_channel.upload_count,
                             ].map((metric_: Metric): Array<number|string> => [
                                 metric_.label, 
                                 metric_.individual_value, 
@@ -106,14 +107,13 @@ export default function InvestingPage({}): JSX.Element {
                     </button>
                     <button id="arrow-button" className="glowing-button" onClick={
                         () => selectChannelIndex(
-                            (current_index_: number): number => current_index_ == Data.channels.length - 1
+                            (current_index_: number): number => current_index_ == Channel.number_of_channels - 1
                                 ? current_index_ 
                                 : current_index_ + 1
                         )
                     }>
                         <i className="fas fa-solid fa-arrow-right"></i>
                     </button>
-                    <div>{subscriber_counts_current_average}</div>
                 </div>
             </div>
         </div>

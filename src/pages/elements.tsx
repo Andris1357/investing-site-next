@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import * as Data from "../data";
+import { channels } from "@/typed_data";
 
 type CellContent = JSX.Element | ReactNode;
 
@@ -56,9 +57,9 @@ export function InputField(args: InputFieldIF): JSX.Element {
 export function ChannelHeader(args: ChannelHeaderArgs): JSX.Element { // /\: make img corners slightly opaque to fade into backgr
     return (
         <div className="channel-header">
-            <img src={Data.channels[args.channel_index_].image_source} className="channel-img" />
-            <span className="channel-name">    {Data.channels[args.channel_index_].name}    </span>
-            <a href={Data.channels[args.channel_index_].link}>
+            <img src={channels[args.channel_index_].image_source} className="channel-img" />
+            <span className="channel-name">    {channels[args.channel_index_].name}    </span>
+            <a href={channels[args.channel_index_].link}>
                 <i className="fas fa-external-link-alt"></i>
             </a>
         </div>
