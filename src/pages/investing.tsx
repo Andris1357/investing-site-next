@@ -8,7 +8,8 @@ import { GlobalState } from "@/store";
 import { ChannelHeader, Table, DisabledTextbox, CategoryWithInfo } from "./elements";
 import * as Data from "../data";
 import { attachHoverMessageEventListeners, positionHoverMessages } from "./utility";
-import { TimeFrameInDays, value_timeframe_map, channels, Channel } from "@/typed_data";
+import { TimeFrameInDays, value_timeframe_map, channels } from "@/typed_data";
+import Channel from "@/Channel";
 import Metric from "@/Metric";
 
 export default function InvestingPage({}): JSX.Element {
@@ -27,8 +28,6 @@ export default function InvestingPage({}): JSX.Element {
         selectChannel(channels[current_channel_selector]);
     }, [current_channel_index])
 
-    useEffect(() => {}, [current_channel]);
-
     useEffect(() => {
         attachHoverMessageEventListeners("info-hover");
         positionHoverMessages("info-hover");
@@ -43,19 +42,10 @@ export default function InvestingPage({}): JSX.Element {
                         <ChannelHeader channel_index_={current_channel_index}/>
                         <p id="statistics-title"><strong>Channel statistics</strong></p>
                         <hr />
-                        <Table rows_content={[
-                            [
-                                React.createElement("label", {htmlFor: "stats-score"}, "Platform score"), 
-                                <DisabledTextbox 
-                                    element_id_={"stats-score"} 
-                                    value_={current_channel.score}
-                                />
-                            ],
-                            [
-                                React.createElement("label", {htmlFor: "stats-date"}, "Last updated"), 
-                                <DisabledTextbox element_id_={"stats-date"} value_={Data.last_updated}/>
-                            ]
-                        ]}/>
+                        <Table rows_content={[[
+                            React.createElement("label", {htmlFor: "stats-date"}, "Last updated"), 
+                            <DisabledTextbox element_id_={"stats-date"} value_={Data.last_updated}/> // NOW: set last updatecd to current day date
+                        ]]}/>
                         <hr />
                         <Table rows_content={[
                             [" ", "Individual value", "Universe average", "Individual index modifier"], 
@@ -63,8 +53,9 @@ export default function InvestingPage({}): JSX.Element {
                                 React.createElement("span", {style: Data.metric_category_style}, "Static metrics"), "", "", ""
                             ],
                             ...([
+                                current_channel.platform_score!,
+                                current_channel.currently_staking, // \/: add row "final score" at the top where the score was originally, to make it unambiguous th it is diff fr the score th still reamplifies itself
                                 current_channel.subscriber_count, 
-                                current_channel.currently_staking,
                                 current_channel.view_count,
                                 current_channel.upload_count,
                             ].map((metric_: Metric): Array<number|string> => [
@@ -85,7 +76,7 @@ export default function InvestingPage({}): JSX.Element {
                                 current_channel.subscriber_count_change, 
                                 current_channel.views_count_change,
                                 current_channel.uploads_count_change,
-                                current_channel.platform_score_change
+                                current_channel.platform_score_change!
                             ].map((metric_: Metric): Array<number|string> => [
                                 metric_.label, 
                                 metric_.individual_value, 
@@ -94,7 +85,7 @@ export default function InvestingPage({}): JSX.Element {
                             ])),
                         ]}/>
                     </div>
-                    <div id="investing-actions">actions</div>
+                    <div id="investing-actions">{}</div>
                 </div>
                 <div id="chart-area">
                     <button id="arrow-button" className="glowing-button" onClick={
@@ -120,3 +111,4 @@ export default function InvestingPage({}): JSX.Element {
         </div>
     )
 }
+// TD: real-time generating new timesteps w sped-up time & chart changes accordingly

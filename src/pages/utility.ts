@@ -1,4 +1,5 @@
 import { SetStateAction } from "react";
+import { Defaults } from "@/interfaces";
 
 export class SetColorEventListenerArgs {
     constructor (
@@ -41,15 +42,25 @@ export function generateRandomTimeseries(
 ): number[] {
     let timeseries: number[] = [initial_value_]; // LT: only load deft timeseries, make req to db if user wants to view longer timefr
     for (let i = 1; i < length_; i++) {
-        timeseries.push(
-            timeseries[i - 1] + (
-                only_int_increments_ === true
-                ? Math.floor(Math.random() * deviation_ - deviation_ / 2 + mean_)
-                : Math.random() * deviation_ - deviation_ / 2 + mean_
-            )
+        let value: number = timeseries[i - 1] + (
+            only_int_increments_ === true
+            ? Math.floor(Math.random() * deviation_ - deviation_ / 2 + mean_)
+            : Math.random() * deviation_ - deviation_ / 2 + mean_
         );
+        timeseries.push(value < 0 ? 0 : value);
     }
     return timeseries;
+}
+
+export function randomArray(
+    range_: number, 
+    offset_: number, 
+    digits_: number,
+): number[] {
+    return Array.from(
+        {length: Defaults.number_of_channels},
+        (): number => shiftedRandom(range_, offset_, digits_)
+    );
 }
 
 export function changeAmountCallback(

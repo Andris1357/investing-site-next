@@ -1,53 +1,9 @@
-import { mean, formatPercentageValue, randomArray } from "./pages/utility";
-import Metric from "./Metric";
+import { Defaults, ChannelInterface } from "./interfaces";
 import MetricData from "./MetricData";
-import { 
-    InvestmentAttributeInterface, 
-    InvestmentInterface, 
-    ChannelInterface, 
-    Defaults 
-} from "./interfaces";
+import Metric from "./Metric";
+import { Investment, investments} from "./typed_data";
 import IncrementChanges from "./IncrementChanges";
-// !: .currently_staking breaks /\ Channel is imported fr its own file
-
-// NOW: rename this to channel_data.ts
-export type TimeFrame = "2 years" | "1 year" | "1 month" | "1 week" | "1 day";
-export type TimeFrameInDays = "17520" | "8760" | "720" | "168" | "24";
-type ValueTimeFrameMap = {
-    [key in TimeFrameInDays]: TimeFrame;
-};
-
-class InvestmentAttribute implements InvestmentAttributeInterface {
-    public label: string
-    
-    constructor (
-        label_acronym_: 'T' | 'I' | 'C', 
-        public value: number | string
-    ) {
-        switch(label_acronym_) {
-            case 'T':
-                this.label = "Time until lock expires";
-                break;
-            case 'I':
-                this.label = "Invested tokens";
-                break;
-            case 'C':
-                this.label = "Current value";
-                break;
-            default:
-                throw new Error("Invalid label acronym. Choose from ['T', 'I', 'C']")
-        }
-    }
-}
-
-export class Investment implements InvestmentInterface {
-    constructor (
-        public investment_id: string, 
-        public time_until_lock_expires: InvestmentAttribute, 
-        public invested_tokens: InvestmentAttribute, 
-        public current_value: InvestmentAttribute
-    ) {}
-}
+import { mean, formatPercentageValue } from "./pages/utility";
 
 class ChannelsInput {
     constructor(
@@ -58,7 +14,7 @@ class ChannelsInput {
     ) {}
 }
 
-export class Channel extends Defaults implements ChannelInterface {
+export default class Channel extends Defaults implements ChannelInterface {
     private static readonly channel_urls: string[] = ["#", "#"]
     private static readonly channel_image_urls: string[] = [
         "https://tse1.mm.bing.net/th?id=OIP.7c-hqo11ia_yd5fcGU7hGgHaF7&pid=Api&rs=1&c=1&qlt=95&w=130&h=104",
@@ -270,63 +226,3 @@ export class Channel extends Defaults implements ChannelInterface {
         )
     }
 }
-
-export const value_timeframe_map: ValueTimeFrameMap = {
-    "17520": "2 years",
-    "8760": "1 year",
-    "720": "1 month",
-    "168": "1 week",
-    "24": "1 day",
-};
-
-export const investments: Investment[][] = [ // TD: investment values sh be in accordance w potential yields based on channel score (accommodate: investment settings) && generate random starting dates -> ßArray.from()
-    [
-        new Investment( // TD: randomize
-            "0x4b68d3f5e32e051cd9b9d3b3a3c6e7e6f1a1b2c2d3e3f4b5c5d6e7f8",
-            new InvestmentAttribute("T", "6d 7h 19m"),
-            new InvestmentAttribute("I", 335927),
-            new InvestmentAttribute("C", 482934)
-        ),
-        new Investment (
-            "0x9a8b7c6d5e4f3g2h1i9a8b7c6d5e4f3g2h1i9a8b7c6d5e4f3g2h1i9",
-            new InvestmentAttribute("T", "2mo 16d 23h 08m"),
-            new InvestmentAttribute("I", 20734),
-            new InvestmentAttribute("C", 17836)
-        ),
-    ],
-    [
-        new Investment(
-            "0x2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9",
-            new InvestmentAttribute("T", "1y 0m 19d 15h 4m"),
-            new InvestmentAttribute("I", 16839),
-            new InvestmentAttribute("C", 276160)
-        ),
-        new Investment (
-            "0x0f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d1c2b3a4f5e6d7",
-            new InvestmentAttribute("T", "12h 38m"),
-            new InvestmentAttribute("I", 27833),
-            new InvestmentAttribute("C", 7512)
-        ),
-        new Investment (
-            "0x5f4e3d2c1b0a5f4e3d2c1b0a5f4e3d2c1b0a5f4e3d2c1b0a5f4e3d2c1",
-            new InvestmentAttribute("T", "2y 6m 20d 2h 27m"),
-            new InvestmentAttribute("I", 274695),
-            new InvestmentAttribute("C", 344809)
-        ),
-    ],
-]
-// TD: validate if increments & averages are correct for different timeframes
-const subscriber_counts: MetricData = new MetricData(150000, 5000, 0, 200, 300);
-const view_counts: MetricData = new MetricData(300000, 100000, 0, 500, 500);
-const upload_counts: MetricData = new MetricData(30, 5, 0, 1, 2.5, true);
-
-const staking_counts: MetricData = new MetricData(10, 0, 0, 0, 100, true);
-export const currently_staking_counts: number[] = randomArray(50000, 0, 0);
-export const currently_staking_count_average: number = mean(currently_staking_counts);
-
-export const channels: Channel[] = Channel.createChannels(new ChannelsInput(
-    subscriber_counts,
-    view_counts,
-    upload_counts,
-    staking_counts,
-));
